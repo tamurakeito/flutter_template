@@ -79,9 +79,9 @@ class HelloworldButton extends HookWidget {
         backgroundColor: MaterialStateProperty.resolveWith<Color?>(
           (Set<MaterialState> states) {
             if (states.contains(MaterialState.disabled)) {
-              return Colors.grey; // 無効状態の背景色
+              return Colors.grey;
             }
-            return Colors.indigo.shade100; // 通常時の背景色
+            return Colors.indigo.shade100;
           },
         ),
         overlayColor: MaterialStateProperty.resolveWith<Color?>(

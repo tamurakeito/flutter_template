@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.6
   sqflite: ^2.3.3+1
   flutter_riverpod: ^2.6.1
+  flutter_hooks: ^0.20.5
+  line_icons: ^2.0.3
 
 dev_dependencies:
   flutter_test:
