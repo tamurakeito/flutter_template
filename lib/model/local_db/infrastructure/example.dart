@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:flutter_template/model/local/domain/entity/example.dart';
-import 'package:flutter_template/model/local/domain/repository/example.dart';
-import 'package:flutter_template/model/local/error/errors.dart';
+import 'package:flutter_template/model/local_db/domain/entity/example.dart';
+import 'package:flutter_template/model/local_db/domain/repository/example.dart';
+import 'package:flutter_template/utils/error.dart';
 import 'package:flutter_template/utils/result.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -11,7 +11,7 @@ class HelloRepositoryImpl implements HelloRepository {
   HelloRepositoryImpl(this._db);
 
   @override
-  Future<Result<Hello, RepositoryErr>> find(int id) async {
+  Future<Result<Hello, LocalDatabaseErr>> find(int id) async {
     try {
       final result = await _db.query(
         'hello_world',
@@ -33,7 +33,7 @@ class HelloRepositoryImpl implements HelloRepository {
       } else {
         return Result(
           data: null,
-          error: RepositoryError.notFound,
+          error: LocalDatabaseError.notFound,
         );
       }
     } catch (e) {
@@ -43,7 +43,7 @@ class HelloRepositoryImpl implements HelloRepository {
       );
       return Result(
         data: null,
-        error: RepositoryError.databaseError,
+        error: LocalDatabaseError.databaseError,
       );
     }
   }

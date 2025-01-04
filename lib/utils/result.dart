@@ -4,5 +4,5 @@ class Result<T, E> {
 
   Result({this.data, this.error});
 
-  // bool get isSuccess => data != null && error == null;
+  bool get isSuccess => data != null && error == null;
 }

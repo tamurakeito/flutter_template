@@ -1,4 +1,4 @@
-import 'package:flutter_template/model/local/infrastructure/database/migration_manager.dart';
+import 'package:flutter_template/model/local_db/infrastructure/database/migration_manager.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 

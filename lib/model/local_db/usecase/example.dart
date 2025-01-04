@@ -1,34 +1,34 @@
 import 'dart:developer';
 
-import 'package:flutter_template/model/local/domain/entity/example.dart';
-import 'package:flutter_template/model/local/domain/repository/example.dart';
-import 'package:flutter_template/model/local/error/errors.dart';
+import 'package:flutter_template/model/local_db/domain/entity/example.dart';
+import 'package:flutter_template/model/local_db/domain/repository/example.dart';
+import 'package:flutter_template/utils/error.dart';
 import 'package:flutter_template/utils/result.dart';
 
 class HelloworldUsecase {
   final HelloRepository repository;
   HelloworldUsecase(this.repository);
 
-  Future<Result<HelloWorld, UsecaseErr>> helloworldDetail(int id) async {
+  Future<Result<HelloWorld, LocalDatabaseErr>> helloworldDetail(int id) async {
     try {
       final result = await repository.find(id);
       final err = result.error;
       if (err != null) {
         switch (err) {
-          case RepositoryError.notFound:
+          case LocalDatabaseError.notFound:
             return Result(
               data: null,
-              error: UsecaseError.notFound,
+              error: LocalDatabaseError.notFound,
             );
-          case RepositoryError.databaseError:
+          case LocalDatabaseError.databaseError:
             return Result(
               data: null,
-              error: UsecaseError.databaseError,
+              error: LocalDatabaseError.databaseError,
             );
           default:
             return Result(
               data: null,
-              error: UsecaseError.internalError,
+              error: LocalDatabaseError.internalError,
             );
         }
       }
@@ -36,7 +36,7 @@ class HelloworldUsecase {
       if (result.data == null) {
         return Result(
           data: null,
-          error: UsecaseError.internalError,
+          error: LocalDatabaseError.internalError,
         );
       }
 
@@ -49,7 +49,7 @@ class HelloworldUsecase {
       );
       return Result(
         data: null,
-        error: UsecaseError.internalError,
+        error: LocalDatabaseError.internalError,
       );
     }
   }
