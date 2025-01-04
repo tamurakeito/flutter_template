@@ -34,6 +34,9 @@ class DataViewModel extends StateNotifier<DataViewModelState> {
       final result = await _helloworldHandler.helloWorldDetail(id);
 
       if (result.isSuccess) {
+        state = state.copyWith(
+          isLoading: false,
+        );
         return result;
       } else {
         String message;
@@ -51,12 +54,18 @@ class DataViewModel extends StateNotifier<DataViewModelState> {
           default:
             message = "That won't rearch here.";
         }
+        state = state.copyWith(
+          isLoading: false,
+        );
         return Result(data: null, error: Err(message: message));
       }
     } catch (e) {
       log(
         "[Error]DataViewModel.fetchHelloworldDetail",
         error: e,
+      );
+      state = state.copyWith(
+        isLoading: false,
       );
       return Result(
         data: null,
