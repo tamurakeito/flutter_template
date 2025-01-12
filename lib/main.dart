@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_template/model/local_db/initializer.dart';
+import 'package:flutter_template/model/local_data/initializer.dart';
 import 'package:flutter_template/view/app_view.dart';
 
 void main() async {

@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:flutter_template/model/local_db/domain/entity/example.dart';
-import 'package:flutter_template/model/local_db/domain/repository/example.dart';
+import 'package:flutter_template/entity/example.dart';
+import 'package:flutter_template/model/local_data/repository/example.dart';
 import 'package:flutter_template/utils/error.dart';
 import 'package:flutter_template/utils/result.dart';
 
@@ -9,26 +9,26 @@ class HelloworldUsecase {
   final HelloRepository repository;
   HelloworldUsecase(this.repository);
 
-  Future<Result<HelloWorld, LocalDatabaseErr>> helloworldDetail(int id) async {
+  Future<Result<HelloWorld, LocalDataErr>> helloworldDetail(int id) async {
     try {
       final result = await repository.find(id);
       final err = result.error;
       if (err != null) {
         switch (err) {
-          case LocalDatabaseError.notFound:
+          case LocalDataError.notFound:
             return Result(
               data: null,
-              error: LocalDatabaseError.notFound,
+              error: LocalDataError.notFound,
             );
-          case LocalDatabaseError.databaseError:
+          case LocalDataError.databaseError:
             return Result(
               data: null,
-              error: LocalDatabaseError.databaseError,
+              error: LocalDataError.databaseError,
             );
           default:
             return Result(
               data: null,
-              error: LocalDatabaseError.internalError,
+              error: LocalDataError.internalError,
             );
         }
       }
@@ -36,7 +36,7 @@ class HelloworldUsecase {
       if (result.data == null) {
         return Result(
           data: null,
-          error: LocalDatabaseError.internalError,
+          error: LocalDataError.internalError,
         );
       }
 
@@ -49,7 +49,7 @@ class HelloworldUsecase {
       );
       return Result(
         data: null,
-        error: LocalDatabaseError.internalError,
+        error: LocalDataError.internalError,
       );
     }
   }

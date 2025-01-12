@@ -1,4 +1,4 @@
-import 'package:flutter_template/model/local_db/infrastructure/database/query/hello_world_query.dart';
+import 'package:flutter_template/model/local_data/infrastructure/database/query/hello_world_query.dart';
 import 'package:sqflite/sqflite.dart';
 
 class MigrationManager {

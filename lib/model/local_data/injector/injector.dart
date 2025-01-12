@@ -1,8 +1,8 @@
-import 'package:flutter_template/model/local_db/domain/repository/example.dart';
-import 'package:flutter_template/model/local_db/infrastructure/database/database_handler.dart';
-import 'package:flutter_template/model/local_db/infrastructure/example.dart';
-import 'package:flutter_template/model/local_db/presentation/handler/example_handler.dart';
-import 'package:flutter_template/model/local_db/usecase/example.dart';
+import 'package:flutter_template/model/local_data/repository/example.dart';
+import 'package:flutter_template/model/local_data/infrastructure/database/database_handler.dart';
+import 'package:flutter_template/model/local_data/infrastructure/example.dart';
+import 'package:flutter_template/model/local_data/presentation/handler/example_handler.dart';
+import 'package:flutter_template/model/local_data/usecase/example.dart';
 
 class Injector {
   static DatabaseHandler injectDB() {
