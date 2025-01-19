@@ -94,7 +94,7 @@ class HttpButton extends HookWidget {
         if (result.error != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Error: ${result.error}'),
+              content: Text('Error: ${result.error!.message}'),
               duration: const Duration(milliseconds: 250),
             ),
           );

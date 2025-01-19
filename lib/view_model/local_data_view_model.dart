@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'package:flutter_template/entity/example.dart';
+import 'package:flutter_template/domain/entity/example.dart';
 import 'package:flutter_template/model/local_data/injector/injector.dart';
 import 'package:flutter_template/model/local_data/presentation/handler/example_handler.dart';
 import 'package:flutter_template/utils/error.dart';

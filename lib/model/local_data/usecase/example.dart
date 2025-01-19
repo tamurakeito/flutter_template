@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:flutter_template/entity/example.dart';
+import 'package:flutter_template/domain/entity/example.dart';
 import 'package:flutter_template/model/local_data/repository/example.dart';
 import 'package:flutter_template/utils/error.dart';
 import 'package:flutter_template/utils/result.dart';
