@@ -10,13 +10,17 @@ import 'package:flutter_template/utils/result.dart';
 
 class HelloRepositoryImpl implements HelloRepository {
   final String baseUrl;
+  final http.Client client;
 
-  HelloRepositoryImpl(this.baseUrl);
+  HelloRepositoryImpl({
+    required this.baseUrl,
+    required this.client,
+  });
 
   @override
   Future<Result<HelloWorld, HttpErr>> helloWorldDetail(int id) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/hello-world/$id'));
+      final response = await client.get(Uri.parse('$baseUrl/hello-world/$id'));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;

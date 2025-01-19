@@ -2,11 +2,17 @@ import 'package:flutter_template/model/http/repository/example.dart';
 import 'package:flutter_template/model/http/infrastructure/example.dart';
 import 'package:flutter_template/model/http/presentation/handler/example_handler.dart';
 import 'package:flutter_template/model/http/usecase/example.dart';
+import 'package:http/http.dart' as http;
 
 class Injector {
+  static http.Client injectHttpClient() {
+    return http.Client(); // 実運用のクライアントを返す
+  }
+
   static HelloRepository injectHelloRepository() {
     const baseUrl = "http://localhost:3004";
-    return HelloRepositoryImpl(baseUrl);
+    final client = injectHttpClient();
+    return HelloRepositoryImpl(baseUrl: baseUrl, client: client);
   }
 
   static HelloworldUsecase injectHelloworldUsecase() {
