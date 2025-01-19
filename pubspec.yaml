@@ -15,6 +15,7 @@ dependencies:
   flutter_hooks: ^0.20.5
   line_icons: ^2.0.3
   http: ^1.2.2
+  hooks_riverpod: ^2.6.1
 
 dev_dependencies:
   flutter_test:

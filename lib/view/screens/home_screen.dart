@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_template/view/ui/atoms/app_text.dart';
 import 'package:flutter_template/view/ui/molecules/loading_circle_mini.dart';
 import 'package:flutter_template/view_model/http_view_model.dart';
@@ -13,6 +14,39 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final httpViewModel = ref.read(httpViewModelProvider.notifier);
     final localDataViewModel = ref.read(localDataViewModelProvider.notifier);
+
+    // state.errorMessage を監視
+    ref.listen<HttpViewModelState>(httpViewModelProvider, (previous, next) {
+      if (next.errorMessage != null &&
+          previous?.errorMessage != next.errorMessage) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${next.errorMessage}'),
+            duration: const Duration(milliseconds: 250),
+            backgroundColor: Colors.red.shade900,
+          ),
+        );
+        httpViewModel.clearErrorMessage();
+      }
+    });
+
+    ref.listen<LocalDataViewModelState>(localDataViewModelProvider,
+        (previous, next) {
+      if (next.errorMessage != null &&
+          previous?.errorMessage != next.errorMessage) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${next.errorMessage}'),
+            duration: const Duration(milliseconds: 250),
+            backgroundColor: Colors.red.shade900,
+          ),
+        );
+        localDataViewModel.clearErrorMessage();
+      }
+    });
+
     return Center(
       child: Container(
         margin: const EdgeInsets.fromLTRB(0, 100, 0, 100),
@@ -91,28 +125,13 @@ class HttpButton extends HookWidget {
 
         if (!context.mounted) return;
 
-        if (result.error != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error: ${result.error!.message}'),
-              duration: const Duration(milliseconds: 250),
-            ),
-          );
-          return;
-        }
-        if (result.data == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Error: data is null'),
-              duration: Duration(milliseconds: 250),
-            ),
-          );
-          return;
-        }
+        if (result.error != null) return;
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(result.data!.hello.name),
             duration: const Duration(milliseconds: 250),
+            backgroundColor: Colors.green.shade900,
           ),
         );
       } finally {
@@ -150,28 +169,13 @@ class LocalDataButton extends HookWidget {
 
         if (!context.mounted) return;
 
-        if (result.error != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error: ${result.error}'),
-              duration: const Duration(milliseconds: 250),
-            ),
-          );
-          return;
-        }
-        if (result.data == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Error: data is null'),
-              duration: Duration(milliseconds: 250),
-            ),
-          );
-          return;
-        }
+        if (result.error != null) return;
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(result.data!.hello.name),
             duration: const Duration(milliseconds: 250),
+            backgroundColor: Colors.blue.shade900,
           ),
         );
       } finally {

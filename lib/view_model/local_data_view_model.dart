@@ -2,17 +2,27 @@ import 'dart:developer';
 import 'package:flutter_template/domain/entity/example.dart';
 import 'package:flutter_template/model/local_data/injector/injector.dart';
 import 'package:flutter_template/model/local_data/presentation/handler/example_handler.dart';
-import 'package:flutter_template/utils/error.dart';
+import 'package:flutter_template/errors/error.dart';
 import 'package:flutter_template/utils/result.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LocalDataViewModelState {
   final bool isLoading;
+  final String? errorMessage;
 
-  LocalDataViewModelState({this.isLoading = false});
+  LocalDataViewModelState({
+    this.isLoading = false,
+    this.errorMessage,
+  });
 
-  LocalDataViewModelState copyWith({bool? isLoading}) {
-    return LocalDataViewModelState(isLoading: isLoading ?? this.isLoading);
+  LocalDataViewModelState copyWith({
+    bool? isLoading,
+    String? errorMessage,
+  }) {
+    return LocalDataViewModelState(
+      isLoading: isLoading ?? this.isLoading,
+      errorMessage: errorMessage,
+    );
   }
 }
 
@@ -45,8 +55,14 @@ class LocalDataViewModel extends StateNotifier<LocalDataViewModelState> {
           default:
             message = "That won't rearch here.";
         }
-        state = state.copyWith(isLoading: false);
-        return Result(data: null, error: Err(message: message));
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: message,
+        );
+        return Result(
+          data: null,
+          error: Err(message: message),
+        );
       }
     } catch (e) {
       log(
@@ -59,6 +75,12 @@ class LocalDataViewModel extends StateNotifier<LocalDataViewModelState> {
         error: const Err(message: "端末内部のデータ取得に予期しないエラーが発生しました"),
       );
     }
+  }
+
+  void clearErrorMessage() {
+    state = state.copyWith(
+      errorMessage: null,
+    );
   }
 }
 
