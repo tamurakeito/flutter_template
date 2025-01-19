@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 class Injector {
   static http.Client injectHttpClient() {
-    return http.Client(); // 実運用のクライアントを返す
+    return http.Client();
   }
 
   static HelloRepository injectHelloRepository() {

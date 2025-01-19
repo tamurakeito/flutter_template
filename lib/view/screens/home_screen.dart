@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_template/errors/error.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_template/view/ui/atoms/app_text.dart';
 import 'package:flutter_template/view/ui/molecules/loading_circle_mini.dart';
@@ -15,9 +16,9 @@ class HomeScreen extends ConsumerWidget {
     final httpViewModel = ref.read(httpViewModelProvider.notifier);
     final localDataViewModel = ref.read(localDataViewModelProvider.notifier);
 
-    // state.errorMessage を監視
     ref.listen<HttpViewModelState>(httpViewModelProvider, (previous, next) {
       if (next.errorMessage != null &&
+          next.errorMessage != "ネットワーク接続がありません" &&
           previous?.errorMessage != next.errorMessage) {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -67,15 +68,18 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
             HttpButton(
-              viewModel: httpViewModel,
+              httpViewModel: httpViewModel,
+              localDataViewModel: localDataViewModel,
               id: 1,
             ),
             HttpButton(
-              viewModel: httpViewModel,
+              httpViewModel: httpViewModel,
+              localDataViewModel: localDataViewModel,
               id: 2,
             ),
             HttpButton(
-              viewModel: httpViewModel,
+              httpViewModel: httpViewModel,
+              localDataViewModel: localDataViewModel,
               id: 3,
             ),
             Container(
@@ -105,11 +109,13 @@ class HomeScreen extends ConsumerWidget {
 }
 
 class HttpButton extends HookWidget {
-  final HttpViewModel viewModel;
+  final HttpViewModel httpViewModel;
+  final LocalDataViewModel localDataViewModel;
   final int id;
   const HttpButton({
     super.key,
-    required this.viewModel,
+    required this.httpViewModel,
+    required this.localDataViewModel,
     required this.id,
   });
 
@@ -121,11 +127,26 @@ class HttpButton extends HookWidget {
       isLoading.value = true;
       try {
         await Future.delayed(const Duration(milliseconds: 500));
-        final result = await viewModel.fetchHelloworldDetail(id);
+        final result = await httpViewModel.fetchHelloworldDetail(id);
 
         if (!context.mounted) return;
 
-        if (result.error != null) return;
+        if (result.error != null) {
+          // ネットワーク非接続時にローカルデータを参照
+          if (result.error == HttpError.networkUnavailable) {
+            final result = await localDataViewModel.fetchHelloworldDetail(id);
+            if (!context.mounted) return;
+            if (result.error != null) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(result.data!.hello.name),
+                duration: const Duration(milliseconds: 250),
+                backgroundColor: Colors.blue.shade900,
+              ),
+            );
+          }
+          return;
+        }
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

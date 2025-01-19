@@ -41,6 +41,7 @@ class HttpViewModel extends StateNotifier<HttpViewModelState> {
       } else {
         String message;
         final err = result.error;
+
         switch (err) {
           case HttpError.notFound:
             message = "データが存在しません";
@@ -69,7 +70,7 @@ class HttpViewModel extends StateNotifier<HttpViewModelState> {
         );
         return Result(
           data: null,
-          error: Err(message: message),
+          error: err,
         );
       }
     } catch (e) {
