@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter_template/model/http/infrastructure/example.dart';
+import 'package:flutter_template/model/http/infrastructure/repository_impl/example.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -46,6 +46,32 @@ void main() {
       expect(result.error, isNull);
     });
 
+    test('Returns HttpError.badRequest when response is 400', () async {
+      const id = 999;
+
+      when(mockHttpClient.get(Uri.parse('$baseUrl/hello-world/$id')))
+          .thenAnswer(
+              (_) async => http.Response('Error: Request was invalid', 400));
+
+      final result = await repository.helloWorldDetail(id);
+
+      expect(result.data, isNull);
+      expect(result.error, HttpError.badRequest);
+    });
+
+    test('Returns HttpError.unauthorized when response is 401', () async {
+      const id = 999;
+
+      when(mockHttpClient.get(Uri.parse('$baseUrl/hello-world/$id')))
+          .thenAnswer((_) async =>
+              http.Response('Error: Not authorized to access', 401));
+
+      final result = await repository.helloWorldDetail(id);
+
+      expect(result.data, isNull);
+      expect(result.error, HttpError.unauthorized);
+    });
+
     test('Returns HttpError.notFound when response is 404', () async {
       const id = 999;
 
@@ -59,30 +85,43 @@ void main() {
       expect(result.error, HttpError.notFound);
     });
 
-    test('Returns HttpError.notFound when response is 401', () async {
+    test('Returns HttpError.internal when response is 500', () async {
+      const id = 999;
+
+      when(mockHttpClient.get(Uri.parse('$baseUrl/hello-world/$id')))
+          .thenAnswer(
+              (_) async => http.Response('Error: Internal server error', 500));
+
+      final result = await repository.helloWorldDetail(id);
+
+      expect(result.data, isNull);
+      expect(result.error, HttpError.internalError);
+    });
+
+    test('Returns HttpError.serviceUnavailabe when response is 503', () async {
       const id = 999;
 
       when(mockHttpClient.get(Uri.parse('$baseUrl/hello-world/$id')))
           .thenAnswer((_) async =>
-              http.Response('Error: Not authorized to access', 401));
+              http.Response('Error: Service temporaroly unavailabe', 503));
 
       final result = await repository.helloWorldDetail(id);
 
       expect(result.data, isNull);
-      expect(result.error, HttpError.unauthorized);
+      expect(result.error, HttpError.serviceUnavailabe);
     });
 
-    test('Returns HttpError.notFound when response is 403', () async {
+    test('Returns HttpError.unknowError when response is unexpected', () async {
       const id = 999;
 
       when(mockHttpClient.get(Uri.parse('$baseUrl/hello-world/$id')))
-          .thenAnswer((_) async => http.Response(
-              'Error: Access to this resource is forbidden', 403));
+          .thenAnswer(
+              (_) async => http.Response('Error: Unknown error occurred', 999));
 
       final result = await repository.helloWorldDetail(id);
 
       expect(result.data, isNull);
-      expect(result.error, HttpError.forbidden);
+      expect(result.error, HttpError.unknownError);
     });
 
     test('Handles network errors (SocketException)', () async {
@@ -118,7 +157,7 @@ void main() {
       final result = await repository.helloWorldDetail(id);
 
       expect(result.data, isNull);
-      expect(result.error, HttpError.internalError);
+      expect(result.error, HttpError.unknownError);
     });
   });
 }
