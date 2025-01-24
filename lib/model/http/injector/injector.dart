@@ -29,9 +29,9 @@ class Injector {
 
   // Usecase injection
 
-  static HelloworldUsecase injectHelloworldUsecase() {
+  static HelloWorldUsecase injectHelloWorldUsecase() {
     final repository = injectHelloRepository();
-    return HelloworldUsecase(repository);
+    return HelloWorldUsecase(repository);
   }
 
   static AccountUsecase injectAccountUsecase() {
@@ -41,9 +41,9 @@ class Injector {
 
   // Handler injection
 
-  static HelloworldHandler injectHelloworldHandler() {
-    final usecase = injectHelloworldUsecase();
-    return HelloworldHandler(usecase);
+  static HelloWorldHandler injectHelloWorldHandler() {
+    final usecase = injectHelloWorldUsecase();
+    return HelloWorldHandler(usecase);
   }
 
   static AccountHandler injectAccountHandler() {

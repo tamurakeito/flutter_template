@@ -6,7 +6,7 @@ import 'package:flutter_template/view/ui/atoms/app_button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_template/view/ui/atoms/app_text.dart';
-import 'package:flutter_template/view_model/http_view_model.dart';
+import 'package:flutter_template/view_model/http/example.dart';
 import 'package:flutter_template/view_model/local_data_view_model.dart';
 
 class Home extends ConsumerWidget {
@@ -14,10 +14,12 @@ class Home extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final httpViewModel = ref.read(httpViewModelProvider.notifier);
+    final httpHelloWorldViewModel =
+        ref.read(httpHelloWorldViewModelProvider.notifier);
     final localDataViewModel = ref.read(localDataViewModelProvider.notifier);
 
-    ref.listen<HttpViewModelState>(httpViewModelProvider, (previous, next) {
+    ref.listen<HttpHelloWorldViewModelState>(httpHelloWorldViewModelProvider,
+        (previous, next) {
       if (next.errorMessage != null &&
           next.errorMessage != "ネットワーク接続がありません" &&
           previous?.errorMessage != next.errorMessage) {
@@ -29,7 +31,7 @@ class Home extends ConsumerWidget {
             backgroundColor: Colors.red.shade900,
           ),
         );
-        httpViewModel.clearErrorMessage();
+        httpHelloWorldViewModel.clearErrorMessage();
       }
     });
 
@@ -69,17 +71,17 @@ class Home extends ConsumerWidget {
               ),
             ),
             HttpButton(
-              httpViewModel: httpViewModel,
+              httpHelloWorldViewModel: httpHelloWorldViewModel,
               localDataViewModel: localDataViewModel,
               id: 1,
             ),
             HttpButton(
-              httpViewModel: httpViewModel,
+              httpHelloWorldViewModel: httpHelloWorldViewModel,
               localDataViewModel: localDataViewModel,
               id: 2,
             ),
             HttpButton(
-              httpViewModel: httpViewModel,
+              httpHelloWorldViewModel: httpHelloWorldViewModel,
               localDataViewModel: localDataViewModel,
               id: 3,
             ),
@@ -131,12 +133,12 @@ class Home extends ConsumerWidget {
 }
 
 class HttpButton extends HookWidget {
-  final HttpViewModel httpViewModel;
+  final HttpHelloWorldViewModel httpHelloWorldViewModel;
   final LocalDataViewModel localDataViewModel;
   final int id;
   const HttpButton({
     super.key,
-    required this.httpViewModel,
+    required this.httpHelloWorldViewModel,
     required this.localDataViewModel,
     required this.id,
   });
@@ -149,7 +151,7 @@ class HttpButton extends HookWidget {
       isLoading.value = true;
       try {
         await Future.delayed(const Duration(milliseconds: 500));
-        final result = await httpViewModel.fetchHelloworldDetail(id);
+        final result = await httpHelloWorldViewModel.fetchHelloWorldDetail(id);
 
         if (!context.mounted) return;
 
