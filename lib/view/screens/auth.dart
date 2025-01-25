@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_template/domain/entity/account.dart';
+import 'package:flutter_template/main.dart';
+import 'package:flutter_template/view/services/snackbar_service.dart';
 import 'package:flutter_template/view/ui/atoms/app_input.dart';
 import 'package:flutter_template/view/ui/atoms/app_text.dart';
 import 'package:flutter_template/view/ui/atoms/clickable_text.dart';
@@ -54,6 +56,13 @@ class Auth extends HookConsumerWidget {
       if (result.error != null) return;
 
       context.go('/');
+
+      await Future.delayed(const Duration(milliseconds: 500));
+      SnackbarService.showSnackBar(
+        'ログインしました',
+        color: Colors.pink.shade900,
+        duration: const Duration(milliseconds: 1000),
+      );
     }
 
     void handleSignUp() async {
@@ -69,6 +78,13 @@ class Auth extends HookConsumerWidget {
       if (result.error != null) return;
 
       context.go('/');
+
+      await Future.delayed(const Duration(milliseconds: 500));
+      SnackbarService.showSnackBar(
+        'アカウントが登録されました',
+        color: Colors.pink.shade900,
+        duration: const Duration(milliseconds: 1000),
+      );
     }
 
     void handleSignOut() {

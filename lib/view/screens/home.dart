@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_template/errors/error.dart';
+import 'package:flutter_template/main.dart';
+import 'package:flutter_template/view/services/snackbar_service.dart';
 import 'package:flutter_template/view/ui/atoms/app_button.dart';
 import 'package:flutter_template/view_model/auth.dart';
 import 'package:flutter_template/view_model/example.dart';
@@ -101,9 +103,22 @@ class Home extends ConsumerWidget {
             AppButton(
               label: "ログアウト",
               color: Colors.pink,
-              handlePress: () {
+              handlePress: () async {
                 authViewModel.clearUser();
                 context.push('/auth');
+                await Future.delayed(const Duration(milliseconds: 500));
+                if (!context.mounted) return;
+                // scaffoldMessengerKey.currentState?.showSnackBar(
+                //   SnackBar(
+                //     content: const Text('ログアウトしました'),
+                //     duration: const Duration(milliseconds: 250),
+                //     backgroundColor: Colors.pink.shade900,
+                //   ),
+                // );
+                SnackbarService.showSnackBar(
+                  'ログアウトしました',
+                  color: Colors.pink.shade900,
+                );
               },
             ),
           ],

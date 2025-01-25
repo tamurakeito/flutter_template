@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_template/model/local_data/initializer.dart';
 import 'package:flutter_template/view/router.dart';
+import 'package:flutter_template/view/services/snackbar_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       routeInformationProvider: goRouter.routeInformationProvider,
       title: 'flutter_template',
       debugShowCheckedModeBanner: false,
+      scaffoldMessengerKey: SnackbarService.scaffoldMessengerKey,
     );
   }
 }
