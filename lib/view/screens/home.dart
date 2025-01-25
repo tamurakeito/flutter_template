@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_template/errors/error.dart';
 import 'package:flutter_template/view/ui/atoms/app_button.dart';
+import 'package:flutter_template/view_model/auth.dart';
 import 'package:flutter_template/view_model/example.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,6 +15,7 @@ class Home extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final helloWorldViewModel = ref.read(helloWorldViewModelProvider.notifier);
+    final authViewModel = ref.read(authViewModelProvider.notifier);
 
     ref.listen<HelloWorldViewModelState>(helloWorldViewModelProvider,
         (previous, next) {
@@ -90,17 +92,18 @@ class Home extends ConsumerWidget {
               ),
             ),
             AppButton(
-              label: "sign-in",
+              label: "auth",
               color: Colors.pink,
               handlePress: () {
-                context.push('/sign-in');
+                context.push('/auth');
               },
             ),
             AppButton(
-              label: "sign-up",
+              label: "ログアウト",
               color: Colors.pink,
               handlePress: () {
-                context.push('/sign-up');
+                authViewModel.clearUser();
+                context.push('/auth');
               },
             ),
           ],

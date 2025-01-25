@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_template/view/screens/home.dart';
-import 'package:flutter_template/view/screens/sign_in.dart';
-import 'package:flutter_template/view/screens/sign_up.dart';
+import 'package:flutter_template/view/screens/auth.dart';
 import 'package:flutter_template/view_model/auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,11 +13,10 @@ final goRouter = GoRouter(
     final currentPath = state.uri.toString();
 
     if (user == null && currentPath == '/') {
-      return '/sign-in';
+      return '/auth';
     }
 
-    if (user != null &&
-        (currentPath == '/sign-in' || currentPath == '/sign-up')) {
+    if (user != null && currentPath == '/auth') {
       container.read(authViewModelProvider.notifier).clearUser();
       return null;
     }
@@ -37,22 +35,12 @@ final goRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: '/sign-in',
-      name: 'sign-in',
+      path: '/auth',
+      name: 'auth',
       pageBuilder: (context, state) {
         return MaterialPage(
           key: state.pageKey,
-          child: const Scaffold(body: SignIn()),
-        );
-      },
-    ),
-    GoRoute(
-      path: '/sign-up',
-      name: 'sign-up',
-      pageBuilder: (context, state) {
-        return MaterialPage(
-          key: state.pageKey,
-          child: const Scaffold(body: SignUp()),
+          child: const Scaffold(body: Auth()),
         );
       },
     ),
