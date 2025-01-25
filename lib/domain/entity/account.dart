@@ -1,13 +1,11 @@
-class Account {
+class User {
   final int id;
   final String userId;
-  final String password;
   final String name;
 
-  Account({
+  User({
     required this.id,
     required this.userId,
-    required this.password,
     required this.name,
   });
 }

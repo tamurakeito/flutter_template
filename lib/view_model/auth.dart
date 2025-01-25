@@ -6,30 +6,33 @@ import 'package:flutter_template/model/http/injector/injector.dart';
 import 'package:flutter_template/model/http/presentation/handler/account_handler.dart';
 import 'package:flutter_template/utils/result.dart';
 
-class HttpAccountViewModelState {
+class AuthViewModelState {
+  final User? user;
   final bool isLoading;
   final String? errorMessage;
 
-  HttpAccountViewModelState({
+  AuthViewModelState({
+    this.user,
     this.isLoading = false,
     this.errorMessage,
   });
 
-  HttpAccountViewModelState copyWith({
+  AuthViewModelState copyWith({
+    User? user,
     bool? isLoading,
     String? errorMessage,
   }) {
-    return HttpAccountViewModelState(
+    return AuthViewModelState(
+      user: user ?? this.user,
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage,
     );
   }
 }
 
-class HttpAccountViewModel extends StateNotifier<HttpAccountViewModelState> {
+class AuthViewModel extends StateNotifier<AuthViewModelState> {
   final AccountHandler _accountHandler;
-  HttpAccountViewModel(this._accountHandler)
-      : super(HttpAccountViewModelState());
+  AuthViewModel(this._accountHandler) : super(AuthViewModelState());
 
   Future<Result<SignInResponse, Err>> fetchSignIn(SignInRequest data) async {
     state = state.copyWith(isLoading: true);
@@ -37,7 +40,15 @@ class HttpAccountViewModel extends StateNotifier<HttpAccountViewModelState> {
       final result = await _accountHandler.signIn(data);
 
       if (result.isSuccess) {
-        state = state.copyWith(isLoading: false);
+        final User user = User(
+          id: result.data!.id,
+          userId: result.data!.userId,
+          name: result.data!.name,
+        );
+        state = state.copyWith(
+          user: user,
+          isLoading: false,
+        );
         return result;
       } else {
         String message;
@@ -100,7 +111,15 @@ class HttpAccountViewModel extends StateNotifier<HttpAccountViewModelState> {
       final result = await _accountHandler.signUp(data);
 
       if (result.isSuccess) {
-        state = state.copyWith(isLoading: false);
+        final User user = User(
+          id: result.data!.id,
+          userId: result.data!.userId,
+          name: result.data!.name,
+        );
+        state = state.copyWith(
+          user: user,
+          isLoading: false,
+        );
         return result;
       } else {
         String message;
@@ -162,15 +181,19 @@ class HttpAccountViewModel extends StateNotifier<HttpAccountViewModelState> {
       errorMessage: null,
     );
   }
+
+  void clearUser() {
+    state = state.copyWith(user: null);
+  }
 }
 
 final accountHandlerProvider =
     Provider<AccountHandler>((ref) => Injector.injectAccountHandler());
 
-final httpAccountViewModelProvider =
-    StateNotifierProvider<HttpAccountViewModel, HttpAccountViewModelState>(
+final authViewModelProvider =
+    StateNotifierProvider<AuthViewModel, AuthViewModelState>(
   (ref) {
     final accountHandler = ref.read(accountHandlerProvider);
-    return HttpAccountViewModel(accountHandler);
+    return AuthViewModel(accountHandler);
   },
 );

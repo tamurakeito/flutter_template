@@ -3,22 +3,19 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_template/errors/error.dart';
 import 'package:flutter_template/view/ui/atoms/app_button.dart';
+import 'package:flutter_template/view_model/example.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_template/view/ui/atoms/app_text.dart';
-import 'package:flutter_template/view_model/http/example.dart';
-import 'package:flutter_template/view_model/local_data_view_model.dart';
 
 class Home extends ConsumerWidget {
   const Home({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final httpHelloWorldViewModel =
-        ref.read(httpHelloWorldViewModelProvider.notifier);
-    final localDataViewModel = ref.read(localDataViewModelProvider.notifier);
+    final helloWorldViewModel = ref.read(helloWorldViewModelProvider.notifier);
 
-    ref.listen<HttpHelloWorldViewModelState>(httpHelloWorldViewModelProvider,
+    ref.listen<HelloWorldViewModelState>(helloWorldViewModelProvider,
         (previous, next) {
       if (next.errorMessage != null &&
           next.errorMessage != "ネットワーク接続がありません" &&
@@ -31,23 +28,7 @@ class Home extends ConsumerWidget {
             backgroundColor: Colors.red.shade900,
           ),
         );
-        httpHelloWorldViewModel.clearErrorMessage();
-      }
-    });
-
-    ref.listen<LocalDataViewModelState>(localDataViewModelProvider,
-        (previous, next) {
-      if (next.errorMessage != null &&
-          previous?.errorMessage != next.errorMessage) {
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: ${next.errorMessage}'),
-            duration: const Duration(milliseconds: 250),
-            backgroundColor: Colors.red.shade900,
-          ),
-        );
-        localDataViewModel.clearErrorMessage();
+        helloWorldViewModel.clearErrorMessage();
       }
     });
 
@@ -71,18 +52,15 @@ class Home extends ConsumerWidget {
               ),
             ),
             HttpButton(
-              httpHelloWorldViewModel: httpHelloWorldViewModel,
-              localDataViewModel: localDataViewModel,
+              viewModel: helloWorldViewModel,
               id: 1,
             ),
             HttpButton(
-              httpHelloWorldViewModel: httpHelloWorldViewModel,
-              localDataViewModel: localDataViewModel,
+              viewModel: helloWorldViewModel,
               id: 2,
             ),
             HttpButton(
-              httpHelloWorldViewModel: httpHelloWorldViewModel,
-              localDataViewModel: localDataViewModel,
+              viewModel: helloWorldViewModel,
               id: 3,
             ),
             Container(
@@ -93,15 +71,15 @@ class Home extends ConsumerWidget {
               ),
             ),
             LocalDataButton(
-              viewModel: localDataViewModel,
+              viewModel: helloWorldViewModel,
               id: 1,
             ),
             LocalDataButton(
-              viewModel: localDataViewModel,
+              viewModel: helloWorldViewModel,
               id: 2,
             ),
             LocalDataButton(
-              viewModel: localDataViewModel,
+              viewModel: helloWorldViewModel,
               id: 3,
             ),
             Container(
@@ -113,14 +91,14 @@ class Home extends ConsumerWidget {
             ),
             AppButton(
               label: "sign-in",
-              color: Colors.deepPurple,
+              color: Colors.pink,
               handlePress: () {
                 context.push('/sign-in');
               },
             ),
             AppButton(
               label: "sign-up",
-              color: Colors.deepPurple,
+              color: Colors.pink,
               handlePress: () {
                 context.push('/sign-up');
               },
@@ -133,13 +111,11 @@ class Home extends ConsumerWidget {
 }
 
 class HttpButton extends HookWidget {
-  final HttpHelloWorldViewModel httpHelloWorldViewModel;
-  final LocalDataViewModel localDataViewModel;
+  final HelloWorldViewModel viewModel;
   final int id;
   const HttpButton({
     super.key,
-    required this.httpHelloWorldViewModel,
-    required this.localDataViewModel,
+    required this.viewModel,
     required this.id,
   });
 
@@ -151,14 +127,14 @@ class HttpButton extends HookWidget {
       isLoading.value = true;
       try {
         await Future.delayed(const Duration(milliseconds: 500));
-        final result = await httpHelloWorldViewModel.fetchHelloWorldDetail(id);
+        final result = await viewModel.fetchHttpHelloWorldDetail(id);
 
         if (!context.mounted) return;
 
         if (result.error != null) {
           // ネットワーク非接続時にローカルデータを参照
           if (result.error == HttpError.networkUnavailable) {
-            final result = await localDataViewModel.fetchHelloworldDetail(id);
+            final result = await viewModel.fetchLocalHelloWorldDetail(id);
             if (!context.mounted) return;
             if (result.error != null) return;
             ScaffoldMessenger.of(context).showSnackBar(
@@ -194,7 +170,7 @@ class HttpButton extends HookWidget {
 }
 
 class LocalDataButton extends HookWidget {
-  final LocalDataViewModel viewModel;
+  final HelloWorldViewModel viewModel;
   final int id;
   const LocalDataButton({
     super.key,
@@ -210,7 +186,7 @@ class LocalDataButton extends HookWidget {
       isLoading.value = true;
       try {
         await Future.delayed(const Duration(milliseconds: 500));
-        final result = await viewModel.fetchHelloworldDetail(id);
+        final result = await viewModel.fetchLocalHelloWorldDetail(id);
 
         if (!context.mounted) return;
 

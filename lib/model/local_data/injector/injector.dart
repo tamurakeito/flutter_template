@@ -20,8 +20,8 @@ class Injector {
     return HelloworldUsecase(repository);
   }
 
-  static HelloworldHandler injectHelloworldHandler() {
+  static HelloWorldHandler injectHelloWorldHandler() {
     final usecase = injectHelloworldUsecase();
-    return HelloworldHandler(usecase);
+    return HelloWorldHandler(usecase);
   }
 }

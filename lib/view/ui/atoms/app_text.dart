@@ -58,27 +58,32 @@ class AppText extends StatelessWidget {
         weight = FontWeight.normal;
         break;
     }
-    ;
+
     switch (type) {
       case AppTextColor.light:
         color = kGray600;
+        break;
+      case AppTextColor.white:
+        color = kWhite;
         break;
       default:
         color = kGray900;
         break;
     }
-    ;
-    return Text(data,
-        style: TextStyle(
-          fontFamily: 'NotoSansJP',
-          fontSize: size,
-          fontWeight: weight,
-          height: 1.0,
-          color: color,
-        ));
+
+    return Text(
+      data,
+      style: TextStyle(
+        fontFamily: 'NotoSansJP',
+        fontSize: size,
+        fontWeight: weight,
+        height: 1.0,
+        color: color,
+      ),
+    );
   }
 }
 
 enum AppTextStyle { h1, h2, h3, h4, h5, h6, lg, md, sm, xs }
 
-enum AppTextColor { dark, light }
+enum AppTextColor { dark, light, white }

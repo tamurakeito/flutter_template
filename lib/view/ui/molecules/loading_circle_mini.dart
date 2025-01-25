@@ -14,6 +14,20 @@ class LoadingCircleMini extends HookWidget {
       duration: const Duration(milliseconds: 1500),
     )..repeat();
 
+    Color color;
+
+    switch (type) {
+      case LoadingCircleMiniColor.light:
+        color = kGray600;
+        break;
+      case LoadingCircleMiniColor.white:
+        color = kWhite;
+        break;
+      default:
+        color = kGray800;
+        break;
+    }
+
     return AnimatedBuilder(
       animation: controller,
       builder: (context, child) {
@@ -24,11 +38,11 @@ class LoadingCircleMini extends HookWidget {
       },
       child: Icon(
         LineIcons.circleNotched,
-        color: type == LoadingCircleMiniColor.light ? kGray600 : kGray800,
+        color: color,
         size: 18,
       ),
     );
   }
 }
 
-enum LoadingCircleMiniColor { dark, light }
+enum LoadingCircleMiniColor { dark, light, white }

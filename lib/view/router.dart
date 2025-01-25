@@ -2,12 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_template/view/screens/home.dart';
 import 'package:flutter_template/view/screens/sign_in.dart';
 import 'package:flutter_template/view/screens/sign_up.dart';
+import 'package:flutter_template/view_model/auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final goRouter = GoRouter(
-  // アプリが起動した時
   initialLocation: '/',
-  // パスと画面の組み合わせ
+  redirect: (context, state) {
+    final container = ProviderScope.containerOf(context);
+    final user = container.read(authViewModelProvider).user;
+    final currentPath = state.uri.toString();
+
+    if (user == null && currentPath == '/') {
+      return '/sign-in';
+    }
+
+    if (user != null &&
+        (currentPath == '/sign-in' || currentPath == '/sign-up')) {
+      container.read(authViewModelProvider.notifier).clearUser();
+      return null;
+    }
+
+    return null;
+  },
   routes: [
     GoRoute(
       path: '/',
