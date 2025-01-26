@@ -1,3 +1,4 @@
+import 'package:flutter_template/flavors.dart';
 import 'package:flutter_template/model/http/infrastructure/repository_impl/account.dart';
 import 'package:flutter_template/model/http/presentation/handler/account_handler.dart';
 import 'package:flutter_template/model/http/repository/account.dart';
@@ -9,6 +10,8 @@ import 'package:flutter_template/model/http/usecase/example.dart';
 import 'package:http/http.dart' as http;
 
 class Injector {
+  static final baseUrl = F.apiBaseUrl;
+
   static http.Client injectHttpClient() {
     return http.Client();
   }
@@ -16,13 +19,11 @@ class Injector {
   // Repository injection
 
   static HelloRepository injectHelloRepository() {
-    const baseUrl = "http://localhost:3004";
     final client = injectHttpClient();
     return HelloRepositoryImpl(baseUrl: baseUrl, client: client);
   }
 
   static AccountRepository injectAccountRepository() {
-    const baseUrl = "http://localhost:3004";
     final client = injectHttpClient();
     return AccountRepositoryImpl(baseUrl: baseUrl, client: client);
   }
