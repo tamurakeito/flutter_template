@@ -1,28 +1,24 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter_template/domain/entity/account.dart';
+import 'package:flutter_template/model/http/infrastructure/api_client.dart';
 import 'package:flutter_template/model/http/infrastructure/repository_impl/account.dart';
-import 'package:flutter_template/model/http/infrastructure/repository_impl/example.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter_template/domain/entity/example.dart';
 import 'package:flutter_template/errors/error.dart';
-import 'example_test.mocks.dart';
+import 'account_test.mocks.dart';
 
-@GenerateMocks([http.Client]) // モック生成対象を指定
+@GenerateMocks([ApiClient]) // モック生成対象を指定
 void main() {
-  late MockClient mockHttpClient;
+  late MockApiClient mockApiClient;
   late AccountRepositoryImpl repository;
 
-  const baseUrl = 'https://example.com/api';
-
   setUp(() {
-    mockHttpClient = MockClient();
-    repository =
-        AccountRepositoryImpl(baseUrl: baseUrl, client: mockHttpClient);
+    mockApiClient = MockApiClient();
+    repository = AccountRepositoryImpl(client: mockApiClient);
   });
 
   group('AccountRepositoryImpl.signIn', () {
@@ -47,10 +43,10 @@ void main() {
         'token': token,
       };
 
-      when(mockHttpClient.post(
-        Uri.parse('$baseUrl/sign-in'),
-        body: jsonEncode(jsonData),
-        headers: {'Content-Type': 'application/json'},
+      when(mockApiClient.clientRequest(
+        '/sign-in',
+        method: 'POST',
+        data: jsonData,
       )).thenAnswer((_) async => http.Response(jsonEncode(mockResponse), 200));
 
       final result = await repository.signIn(data);
@@ -75,10 +71,10 @@ void main() {
         'password': password,
       };
 
-      when(mockHttpClient.post(
-        Uri.parse('$baseUrl/sign-in'),
-        body: jsonEncode(jsonData),
-        headers: {'Content-Type': 'application/json'},
+      when(mockApiClient.clientRequest(
+        '/sign-in',
+        method: 'POST',
+        data: jsonData,
       )).thenAnswer(
           (_) async => http.Response('Error: Request was invalid', 400));
 
@@ -100,10 +96,10 @@ void main() {
         'password': password,
       };
 
-      when(mockHttpClient.post(
-        Uri.parse('$baseUrl/sign-in'),
-        body: jsonEncode(jsonData),
-        headers: {'Content-Type': 'application/json'},
+      when(mockApiClient.clientRequest(
+        '/sign-in',
+        method: 'POST',
+        data: jsonData,
       )).thenAnswer(
           (_) async => http.Response('Error: Resouce Not Found', 404));
 
@@ -125,10 +121,10 @@ void main() {
         'password': password,
       };
 
-      when(mockHttpClient.post(
-        Uri.parse('$baseUrl/sign-in'),
-        body: jsonEncode(jsonData),
-        headers: {'Content-Type': 'application/json'},
+      when(mockApiClient.clientRequest(
+        '/sign-in',
+        method: 'POST',
+        data: jsonData,
       )).thenAnswer(
           (_) async => http.Response('Error: Internal server error', 500));
 
@@ -150,10 +146,10 @@ void main() {
         'password': password,
       };
 
-      when(mockHttpClient.post(
-        Uri.parse('$baseUrl/sign-in'),
-        body: jsonEncode(jsonData),
-        headers: {'Content-Type': 'application/json'},
+      when(mockApiClient.clientRequest(
+        '/sign-in',
+        method: 'POST',
+        data: jsonData,
       )).thenAnswer((_) async =>
           http.Response('Error: Service temporarily unavailabe', 503));
 
@@ -175,10 +171,10 @@ void main() {
         'password': password,
       };
 
-      when(mockHttpClient.post(
-        Uri.parse('$baseUrl/sign-in'),
-        body: jsonEncode(jsonData),
-        headers: {'Content-Type': 'application/json'},
+      when(mockApiClient.clientRequest(
+        '/sign-in',
+        method: 'POST',
+        data: jsonData,
       )).thenAnswer(
           (_) async => http.Response('Error: Unknown error occured', 999));
 
@@ -200,10 +196,10 @@ void main() {
         'password': password,
       };
 
-      when(mockHttpClient.post(
-        Uri.parse('$baseUrl/sign-in'),
-        body: jsonEncode(jsonData),
-        headers: {'Content-Type': 'application/json'},
+      when(mockApiClient.clientRequest(
+        '/sign-in',
+        method: 'POST',
+        data: jsonData,
       )).thenThrow(const SocketException('Failed to connect to the network'));
 
       final result = await repository.signIn(data);
@@ -224,10 +220,10 @@ void main() {
         'password': password,
       };
 
-      when(mockHttpClient.post(
-        Uri.parse('$baseUrl/sign-in'),
-        body: jsonEncode(jsonData),
-        headers: {'Content-Type': 'application/json'},
+      when(mockApiClient.clientRequest(
+        '/sign-in',
+        method: 'POST',
+        data: jsonData,
       )).thenThrow(TimeoutException('Connection timed out'));
 
       final result = await repository.signIn(data);
@@ -248,10 +244,10 @@ void main() {
         'password': password,
       };
 
-      when(mockHttpClient.post(
-        Uri.parse('$baseUrl/sign-in'),
-        body: jsonEncode(jsonData),
-        headers: {'Content-Type': 'application/json'},
+      when(mockApiClient.clientRequest(
+        '/sign-in',
+        method: 'POST',
+        data: jsonData,
       )).thenThrow(Exception('Unexpected error'));
 
       final result = await repository.signIn(data);
@@ -285,10 +281,10 @@ void main() {
         'token': token,
       };
 
-      when(mockHttpClient.post(
-        Uri.parse('$baseUrl/sign-up'),
-        body: jsonEncode(jsonData),
-        headers: {'Content-Type': 'application/json'},
+      when(mockApiClient.clientRequest(
+        '/sign-up',
+        method: 'POST',
+        data: jsonData,
       )).thenAnswer((_) async => http.Response(jsonEncode(mockResponse), 200));
 
       final result = await repository.signUp(data);
@@ -316,10 +312,10 @@ void main() {
         'name': name,
       };
 
-      when(mockHttpClient.post(
-        Uri.parse('$baseUrl/sign-up'),
-        body: jsonEncode(jsonData),
-        headers: {'Content-Type': 'application/json'},
+      when(mockApiClient.clientRequest(
+        '/sign-up',
+        method: 'POST',
+        data: jsonData,
       )).thenAnswer(
           (_) async => http.Response('Error: Request was invalid', 400));
 
@@ -344,10 +340,10 @@ void main() {
         'name': name,
       };
 
-      when(mockHttpClient.post(
-        Uri.parse('$baseUrl/sign-up'),
-        body: jsonEncode(jsonData),
-        headers: {'Content-Type': 'application/json'},
+      when(mockApiClient.clientRequest(
+        '/sign-up',
+        method: 'POST',
+        data: jsonData,
       )).thenAnswer((_) async => http.Response('Error: Resouce conflict', 409));
 
       final result = await repository.signUp(data);
@@ -371,10 +367,10 @@ void main() {
         'name': name,
       };
 
-      when(mockHttpClient.post(
-        Uri.parse('$baseUrl/sign-up'),
-        body: jsonEncode(jsonData),
-        headers: {'Content-Type': 'application/json'},
+      when(mockApiClient.clientRequest(
+        '/sign-up',
+        method: 'POST',
+        data: jsonData,
       )).thenAnswer(
           (_) async => http.Response('Error: Internal server error', 500));
 
@@ -399,10 +395,10 @@ void main() {
         'name': name,
       };
 
-      when(mockHttpClient.post(
-        Uri.parse('$baseUrl/sign-up'),
-        body: jsonEncode(jsonData),
-        headers: {'Content-Type': 'application/json'},
+      when(mockApiClient.clientRequest(
+        '/sign-up',
+        method: 'POST',
+        data: jsonData,
       )).thenAnswer((_) async =>
           http.Response('Error: Service temporarily unavailabe', 503));
 
@@ -428,10 +424,10 @@ void main() {
         'name': name,
       };
 
-      when(mockHttpClient.post(
-        Uri.parse('$baseUrl/sign-up'),
-        body: jsonEncode(jsonData),
-        headers: {'Content-Type': 'application/json'},
+      when(mockApiClient.clientRequest(
+        '/sign-up',
+        method: 'POST',
+        data: jsonData,
       )).thenAnswer(
           (_) async => http.Response('Error: Unknown error occurred', 999));
 
@@ -456,10 +452,10 @@ void main() {
         'name': name,
       };
 
-      when(mockHttpClient.post(
-        Uri.parse('$baseUrl/sign-up'),
-        body: jsonEncode(jsonData),
-        headers: {'Content-Type': 'application/json'},
+      when(mockApiClient.clientRequest(
+        '/sign-up',
+        method: 'POST',
+        data: jsonData,
       )).thenThrow(const SocketException('Failed to connect to the network'));
 
       final result = await repository.signUp(data);
@@ -483,10 +479,10 @@ void main() {
         'name': name,
       };
 
-      when(mockHttpClient.post(
-        Uri.parse('$baseUrl/sign-up'),
-        body: jsonEncode(jsonData),
-        headers: {'Content-Type': 'application/json'},
+      when(mockApiClient.clientRequest(
+        '/sign-up',
+        method: 'POST',
+        data: jsonData,
       )).thenThrow(TimeoutException('Connection timed out'));
 
       final result = await repository.signUp(data);
@@ -510,10 +506,10 @@ void main() {
         'name': name,
       };
 
-      when(mockHttpClient.post(
-        Uri.parse('$baseUrl/sign-up'),
-        body: jsonEncode(jsonData),
-        headers: {'Content-Type': 'application/json'},
+      when(mockApiClient.clientRequest(
+        '/sign-up',
+        method: 'POST',
+        data: jsonData,
       )).thenThrow(Exception('Unexpected error'));
 
       final result = await repository.signUp(data);
