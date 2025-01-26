@@ -35,9 +35,17 @@ class AuthViewModel extends StateNotifier<AuthViewModelState> {
   AuthViewModel(this._accountHandler) : super(AuthViewModelState());
 
   Future<Result<SignInResponse, Err>> fetchSignIn(SignInRequest data) async {
+    final startTime = DateTime.now();
     state = state.copyWith(isLoading: true);
     try {
       final result = await _accountHandler.signIn(data);
+
+      // 処理が早く終了した場合でも最低遅延を確保
+      final elapsedTime = DateTime.now().difference(startTime);
+      if (elapsedTime.inMilliseconds < 1000) {
+        await Future.delayed(
+            Duration(milliseconds: 1000 - elapsedTime.inMilliseconds));
+      }
 
       if (result.isSuccess) {
         final User user = User(
@@ -106,9 +114,17 @@ class AuthViewModel extends StateNotifier<AuthViewModelState> {
   }
 
   Future<Result<SignUpResponse, Err>> fetchSignUp(SignUpRequest data) async {
+    final startTime = DateTime.now();
     state = state.copyWith(isLoading: true);
     try {
       final result = await _accountHandler.signUp(data);
+
+      // 処理が早く終了した場合でも最低遅延を確保
+      final elapsedTime = DateTime.now().difference(startTime);
+      if (elapsedTime.inMilliseconds < 1000) {
+        await Future.delayed(
+            Duration(milliseconds: 1000 - elapsedTime.inMilliseconds));
+      }
 
       if (result.isSuccess) {
         final User user = User(

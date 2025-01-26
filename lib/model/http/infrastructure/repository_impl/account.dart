@@ -81,7 +81,7 @@ class AccountRepositoryImpl implements AccountRepository {
       );
     } catch (e) {
       log(
-        "[Error]http.HelloRepositoryImpl.find",
+        "[Error]http.AccountRepositoryImpl.signIn",
         error: e,
       );
       return Result(
@@ -153,7 +153,7 @@ class AccountRepositoryImpl implements AccountRepository {
       );
     } catch (e) {
       log(
-        "[Error]http.HelloRepositoryImpl.find",
+        "[Error]http.AccountRepositoryImpl.signUp",
         error: e,
       );
       return Result(

@@ -136,7 +136,6 @@ class HttpButton extends HookWidget {
     void handlePress() async {
       isLoading.value = true;
       try {
-        await Future.delayed(const Duration(milliseconds: 500));
         final result = await viewModel.fetchHttpHelloWorldDetail(id);
 
         if (!context.mounted) return;
@@ -195,7 +194,6 @@ class LocalDataButton extends HookWidget {
     void handlePress() async {
       isLoading.value = true;
       try {
-        await Future.delayed(const Duration(milliseconds: 500));
         final result = await viewModel.fetchLocalHelloWorldDetail(id);
 
         if (!context.mounted) return;

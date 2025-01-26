@@ -15,8 +15,6 @@ class ApiClient {
       {String method = 'GET', Map<String, dynamic>? data}) async {
     var uri = Uri.parse('$baseUrl$path');
 
-    // await Future.delayed(Duration(milliseconds: 500));
-
     switch (method.toUpperCase()) {
       case 'POST':
         return client.post(uri,
