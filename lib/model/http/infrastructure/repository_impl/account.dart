@@ -8,17 +8,13 @@ import 'package:flutter_template/errors/error.dart';
 import 'package:flutter_template/model/http/infrastructure/api_client.dart';
 import 'package:flutter_template/model/http/repository/account.dart';
 import 'package:flutter_template/utils/result.dart';
-import 'package:http/http.dart' as http;
 
 class AccountRepositoryImpl implements AccountRepository {
-  final String baseUrl;
-  final http.Client client;
-  final ApiClient apiClient;
+  final ApiClient client;
 
   AccountRepositoryImpl({
-    required this.baseUrl,
     required this.client,
-  }) : apiClient = ApiClient(baseUrl: baseUrl, client: client);
+  });
 
   @override
   Future<Result<SignInResponse, HttpErr>> signIn(SignInRequest data) async {
@@ -28,7 +24,7 @@ class AccountRepositoryImpl implements AccountRepository {
         'password': data.password,
       };
 
-      final response = await apiClient.clientRequest(
+      final response = await client.clientRequest(
         '/sign-in',
         method: 'POST',
         data: jsonData,
@@ -100,7 +96,7 @@ class AccountRepositoryImpl implements AccountRepository {
         'name': data.name,
       };
 
-      final response = await apiClient.clientRequest(
+      final response = await client.clientRequest(
         '/sign-up',
         method: 'POST',
         data: jsonData,

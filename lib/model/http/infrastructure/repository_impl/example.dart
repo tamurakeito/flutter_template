@@ -7,22 +7,18 @@ import 'package:flutter_template/model/http/infrastructure/api_client.dart';
 import 'package:flutter_template/model/http/repository/example.dart';
 import 'package:flutter_template/errors/error.dart';
 import 'package:flutter_template/utils/result.dart';
-import 'package:http/http.dart' as http;
 
 class HelloRepositoryImpl implements HelloRepository {
-  final String baseUrl;
-  final http.Client client;
-  final ApiClient apiClient;
+  final ApiClient client;
 
   HelloRepositoryImpl({
-    required this.baseUrl,
     required this.client,
-  }) : apiClient = ApiClient(baseUrl: baseUrl, client: client);
+  });
 
   @override
   Future<Result<HelloWorld, HttpErr>> helloWorldDetail(int id) async {
     try {
-      final response = await apiClient.clientRequest('/hello-world/$id');
+      final response = await client.clientRequest('/hello-world/$id');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;

@@ -1,4 +1,5 @@
 import 'package:flutter_template/flavors.dart';
+import 'package:flutter_template/model/http/infrastructure/api_client.dart';
 import 'package:flutter_template/model/http/infrastructure/repository_impl/account.dart';
 import 'package:flutter_template/model/http/presentation/handler/account_handler.dart';
 import 'package:flutter_template/model/http/repository/account.dart';
@@ -7,31 +8,42 @@ import 'package:flutter_template/model/http/infrastructure/repository_impl/examp
 import 'package:flutter_template/model/http/presentation/handler/example_handler.dart';
 import 'package:flutter_template/model/http/usecase/account.dart';
 import 'package:flutter_template/model/http/usecase/example.dart';
+import 'package:flutter_template/view_model/auth.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 class Injector {
-  static final baseUrl = F.apiBaseUrl;
-
   static http.Client injectHttpClient() {
     return http.Client();
   }
 
+  static ApiClient injectApiClient({Ref? ref}) {
+    final baseUrl = F.apiBaseUrl;
+    final client = injectHttpClient();
+    final token = ref?.watch(tokenProvider);
+    return ApiClient(
+      baseUrl: baseUrl,
+      client: client,
+      token: token,
+    );
+  }
+
   // Repository injection
 
-  static HelloRepository injectHelloRepository() {
-    final client = injectHttpClient();
-    return HelloRepositoryImpl(baseUrl: baseUrl, client: client);
+  static HelloRepository injectHelloRepository(Ref ref) {
+    final client = injectApiClient(ref: ref);
+    return HelloRepositoryImpl(client: client);
   }
 
   static AccountRepository injectAccountRepository() {
-    final client = injectHttpClient();
-    return AccountRepositoryImpl(baseUrl: baseUrl, client: client);
+    final client = injectApiClient();
+    return AccountRepositoryImpl(client: client);
   }
 
   // Usecase injection
 
-  static HelloWorldUsecase injectHelloWorldUsecase() {
-    final repository = injectHelloRepository();
+  static HelloWorldUsecase injectHelloWorldUsecase(Ref ref) {
+    final repository = injectHelloRepository(ref);
     return HelloWorldUsecase(repository);
   }
 
@@ -42,8 +54,8 @@ class Injector {
 
   // Handler injection
 
-  static HelloWorldHandler injectHelloWorldHandler() {
-    final usecase = injectHelloWorldUsecase();
+  static HelloWorldHandler injectHelloWorldHandler(Ref ref) {
+    final usecase = injectHelloWorldUsecase(ref);
     return HelloWorldHandler(usecase);
   }
 

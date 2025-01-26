@@ -32,7 +32,9 @@ class AuthViewModelState {
 
 class AuthViewModel extends StateNotifier<AuthViewModelState> {
   final AccountHandler _accountHandler;
-  AuthViewModel(this._accountHandler) : super(AuthViewModelState());
+  final Ref ref;
+
+  AuthViewModel(this._accountHandler, this.ref) : super(AuthViewModelState());
 
   Future<Result<SignInResponse, Err>> fetchSignIn(SignInRequest data) async {
     final startTime = DateTime.now();
@@ -57,6 +59,8 @@ class AuthViewModel extends StateNotifier<AuthViewModelState> {
           user: user,
           isLoading: false,
         );
+
+        ref.read(tokenProvider.notifier).updateToken(result.data!.token);
         return result;
       } else {
         String message;
@@ -210,6 +214,22 @@ final authViewModelProvider =
     StateNotifierProvider<AuthViewModel, AuthViewModelState>(
   (ref) {
     final accountHandler = ref.read(accountHandlerProvider);
-    return AuthViewModel(accountHandler);
+    return AuthViewModel(accountHandler, ref);
   },
+);
+
+class TokenProvider extends StateNotifier<String?> {
+  TokenProvider() : super(null);
+
+  void updateToken(String? token) {
+    state = token;
+  }
+
+  void clearToken() {
+    state = null;
+  }
+}
+
+final tokenProvider = StateNotifierProvider<TokenProvider, String?>(
+  (ref) => TokenProvider(),
 );

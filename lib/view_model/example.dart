@@ -163,7 +163,7 @@ class HelloWorldViewModel extends StateNotifier<HelloWorldViewModelState> {
 }
 
 final httpHelloWorldHandlerProvider = Provider<http.HelloWorldHandler>(
-    (ref) => http_injector.Injector.injectHelloWorldHandler());
+    (ref) => http_injector.Injector.injectHelloWorldHandler(ref));
 
 final localHelloWorldHandlerProvider = Provider<local.HelloWorldHandler>(
     (ref) => local_injector.Injector.injectHelloWorldHandler());
