@@ -26,9 +26,9 @@ class ResponsiveButton extends StatelessWidget {
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.resolveWith<Color?>(
             (Set<WidgetState> states) {
-              // if (states.contains(WidgetState.disabled)) {
-              //   return color.withOpacity(0.6);
-              // }
+              if (states.contains(WidgetState.disabled)) {
+                return color.withOpacity(0.6);
+              }
               return color;
             },
           ),

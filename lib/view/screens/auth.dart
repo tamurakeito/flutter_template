@@ -6,6 +6,7 @@ import 'package:flutter_template/view/ui/atoms/app_input.dart';
 import 'package:flutter_template/view/ui/atoms/app_text.dart';
 import 'package:flutter_template/view/ui/atoms/clickable_text.dart';
 import 'package:flutter_template/view/ui/atoms/responsive_button.dart';
+import 'package:flutter_template/view/ui/molecules/password_input.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_template/view_model/auth.dart';
@@ -117,7 +118,7 @@ class Auth extends HookConsumerWidget {
                     ),
                     Container(
                       padding: const EdgeInsets.all(16),
-                      child: AppInput(
+                      child: PasswordInput(
                         controller: passwordController,
                         label: 'パスワード',
                         color: Colors.pink.shade800,
@@ -160,7 +161,7 @@ class Auth extends HookConsumerWidget {
                         ),
                         Container(
                           padding: const EdgeInsets.all(16),
-                          child: AppInput(
+                          child: PasswordInput(
                             controller: passwordController,
                             label: 'パスワード',
                             color: Colors.pink.shade800,

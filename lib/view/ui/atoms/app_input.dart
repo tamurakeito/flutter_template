@@ -6,6 +6,8 @@ class AppInput extends StatelessWidget {
   final Color color;
   final FocusNode? focusNode;
   final void Function()? onEditingComplete;
+  final bool obscureText;
+  final IconButton? iconButton;
   const AppInput({
     super.key,
     required this.controller,
@@ -13,6 +15,8 @@ class AppInput extends StatelessWidget {
     this.color = Colors.indigo,
     this.focusNode,
     this.onEditingComplete,
+    this.obscureText = false,
+    this.iconButton,
   });
 
   @override
@@ -28,9 +32,11 @@ class AppInput extends StatelessWidget {
             width: 2.0,
           ),
         ),
+        suffixIcon: iconButton,
       ),
       focusNode: focusNode,
       onEditingComplete: onEditingComplete,
+      obscureText: obscureText,
     );
   }
 }
