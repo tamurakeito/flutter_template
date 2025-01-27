@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:flutter_template/domain/entity/example.dart';
+import 'package:flutter_template/types/example.dart';
 import 'package:flutter_template/model/http/infrastructure/api_client.dart';
 import 'package:flutter_template/model/http/repository/example.dart';
 import 'package:flutter_template/errors/error.dart';

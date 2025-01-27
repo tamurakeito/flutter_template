@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_template/domain/entity/account.dart';
+import 'package:flutter_template/types/account.dart';
 import 'package:flutter_template/view/services/snackbar_service.dart';
 import 'package:flutter_template/view/ui/atoms/app_input.dart';
 import 'package:flutter_template/view/ui/atoms/app_text.dart';

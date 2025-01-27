@@ -1,4 +1,4 @@
-import 'package:flutter_template/domain/entity/account.dart';
+import 'package:flutter_template/types/account.dart';
 import 'package:flutter_template/errors/error.dart';
 import 'package:flutter_template/model/http/repository/account.dart';
 import 'package:flutter_template/utils/result.dart';

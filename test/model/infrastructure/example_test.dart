@@ -7,7 +7,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter_template/domain/entity/example.dart';
+import 'package:flutter_template/types/example.dart';
 import 'package:flutter_template/errors/error.dart';
 import 'example_test.mocks.dart';
 
