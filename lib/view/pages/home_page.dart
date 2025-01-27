@@ -10,8 +10,8 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_template/view/ui/atoms/app_text.dart';
 
-class Home extends ConsumerWidget {
-  const Home({super.key});
+class HomePage extends ConsumerWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,85 +35,87 @@ class Home extends ConsumerWidget {
       }
     });
 
-    return Center(
-      child: Container(
-        margin: const EdgeInsets.fromLTRB(0, 100, 0, 100),
-        child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.all(16),
-              child: const AppText(
-                "Hello, World!",
-                style: AppTextStyle.h1,
+    return Scaffold(
+      body: Center(
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(0, 100, 0, 100),
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.all(16),
+                child: const AppText(
+                  "Hello, World!",
+                  style: AppTextStyle.h1,
+                ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.all(16),
-              child: const AppText(
-                "http",
-                style: AppTextStyle.h2,
+              Container(
+                margin: const EdgeInsets.all(16),
+                child: const AppText(
+                  "http",
+                  style: AppTextStyle.h2,
+                ),
               ),
-            ),
-            HttpButton(
-              viewModel: helloWorldViewModel,
-              id: 1,
-            ),
-            HttpButton(
-              viewModel: helloWorldViewModel,
-              id: 2,
-            ),
-            HttpButton(
-              viewModel: helloWorldViewModel,
-              id: 3,
-            ),
-            Container(
-              margin: const EdgeInsets.all(16),
-              child: const AppText(
-                "local data",
-                style: AppTextStyle.h2,
+              HttpButton(
+                viewModel: helloWorldViewModel,
+                id: 1,
               ),
-            ),
-            LocalDataButton(
-              viewModel: helloWorldViewModel,
-              id: 1,
-            ),
-            LocalDataButton(
-              viewModel: helloWorldViewModel,
-              id: 2,
-            ),
-            LocalDataButton(
-              viewModel: helloWorldViewModel,
-              id: 3,
-            ),
-            Container(
-              margin: const EdgeInsets.all(16),
-              child: const AppText(
-                "routing",
-                style: AppTextStyle.h2,
+              HttpButton(
+                viewModel: helloWorldViewModel,
+                id: 2,
               ),
-            ),
-            AppButton(
-              label: "auth",
-              color: Colors.pink,
-              handlePress: () {
-                context.push('/auth');
-              },
-            ),
-            AppButton(
-              label: "ログアウト",
-              color: Colors.pink,
-              handlePress: () async {
-                authViewModel.clearUser();
-                context.push('/auth');
-                await Future.delayed(const Duration(milliseconds: 500));
-                if (!context.mounted) return;
-                SnackbarService.showSnackBar(
-                  'ログアウトしました',
-                  color: Colors.pink.shade900,
-                );
-              },
-            ),
-          ],
+              HttpButton(
+                viewModel: helloWorldViewModel,
+                id: 3,
+              ),
+              Container(
+                margin: const EdgeInsets.all(16),
+                child: const AppText(
+                  "local data",
+                  style: AppTextStyle.h2,
+                ),
+              ),
+              LocalDataButton(
+                viewModel: helloWorldViewModel,
+                id: 1,
+              ),
+              LocalDataButton(
+                viewModel: helloWorldViewModel,
+                id: 2,
+              ),
+              LocalDataButton(
+                viewModel: helloWorldViewModel,
+                id: 3,
+              ),
+              Container(
+                margin: const EdgeInsets.all(16),
+                child: const AppText(
+                  "routing",
+                  style: AppTextStyle.h2,
+                ),
+              ),
+              AppButton(
+                label: "auth",
+                color: Colors.pink,
+                handlePress: () {
+                  context.push('/auth');
+                },
+              ),
+              AppButton(
+                label: "ログアウト",
+                color: Colors.pink,
+                handlePress: () async {
+                  authViewModel.clearUser();
+                  context.push('/auth');
+                  await Future.delayed(const Duration(milliseconds: 500));
+                  if (!context.mounted) return;
+                  SnackbarService.showSnackBar(
+                    'ログアウトしました',
+                    color: Colors.pink.shade900,
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
