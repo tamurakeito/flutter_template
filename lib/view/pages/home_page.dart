@@ -101,13 +101,6 @@ class HomePage extends ConsumerWidget {
                 },
               ),
               AppButton(
-                label: "video-chat",
-                color: Colors.pink,
-                handlePress: () {
-                  context.push('/video-chat');
-                },
-              ),
-              AppButton(
                 label: "ログアウト",
                 color: Colors.pink,
                 handlePress: () async {

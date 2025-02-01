@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_template/view/pages/home_page.dart';
 import 'package:flutter_template/view/pages/auth_page.dart';
-import 'package:flutter_template/view/pages/video_chat_page.dart';
 import 'package:flutter_template/view_model/auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -42,16 +41,6 @@ final goRouter = GoRouter(
         return MaterialPage(
           key: state.pageKey,
           child: const AuthPage(),
-        );
-      },
-    ),
-    GoRoute(
-      path: '/video-chat',
-      name: 'video-chat',
-      pageBuilder: (context, state) {
-        return MaterialPage(
-          key: state.pageKey,
-          child: const VideoChatPage(),
         );
       },
     ),
