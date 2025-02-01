@@ -7,6 +7,7 @@ import 'package:flutter_template/view/ui/atoms/app_text.dart';
 import 'package:flutter_template/view/ui/atoms/responsive_button.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 final webSocketProvider = Provider<WebSocketChannel>((ref) {
   const url = 'ws://localhost:8081/ws';
@@ -26,7 +27,6 @@ class VideoChatPage extends HookConsumerWidget {
 
     useEffect(() {
       final subscription = webSocket.stream.listen((data) {
-        print('recieve: ${data.toString()}');
         ref.read(messageProvider.notifier).state = data.toString();
       });
 
@@ -48,7 +48,7 @@ class VideoChatPage extends HookConsumerWidget {
             Padding(
               padding: const EdgeInsets.all(16),
               child: AppText(
-                'Recieved Message: $message',
+                'Received Message: $message',
                 style: AppTextStyle.md,
               ),
             ),
@@ -63,11 +63,10 @@ class VideoChatPage extends HookConsumerWidget {
             Padding(
               padding: const EdgeInsets.all(16),
               child: ResponsiveButton(
-                label: '送信する',
+                label: 'SDP を生成する',
                 color: Colors.purple,
-                onPressed: () {
-                  webSocket.sink
-                      .add(jsonEncode({'message': messageController.text}));
+                onPressed: () async {
+                  await createSDPWithStun();
                 },
               ),
             ),
@@ -76,4 +75,24 @@ class VideoChatPage extends HookConsumerWidget {
       ),
     );
   }
+}
+
+/// Google の STUN サーバーを使って SDP を生成する関数
+Future<void> createSDPWithStun() async {
+  // STUN サーバーを指定
+  final Map<String, dynamic> configuration = {
+    'iceServers': [
+      {'urls': 'stun:stun.l.google.com:19302'}
+    ]
+  };
+
+  // PeerConnection の作成
+  final RTCPeerConnection peerConnection =
+      await createPeerConnection(configuration);
+
+  // SDP の生成
+  final RTCSessionDescription offer = await peerConnection.createOffer();
+  await peerConnection.setLocalDescription(offer);
+
+  print("Generated SDP with STUN: ${offer.sdp}");
 }

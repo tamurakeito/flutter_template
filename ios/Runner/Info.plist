@@ -45,5 +45,13 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<!-- 📌 ここから追加 -->
+	<key>NSCameraUsageDescription</key>
+	<string>ビデオ通話のためにカメラを使用します</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>音声通話のためにマイクを使用します</string>
+	<!-- 📌 ここまで追加 -->
+
 </dict>
 </plist>
