@@ -25,7 +25,8 @@ class F {
   static String get apiBaseUrl {
     switch (appFlavor) {
       case Flavor.development:
-        return 'http://localhost:3004';
+        // return 'http://localhost:3004';
+        return 'http://192.168.0.112:3004';
       case Flavor.local:
         return 'http://localhost:8080';
       case Flavor.production:

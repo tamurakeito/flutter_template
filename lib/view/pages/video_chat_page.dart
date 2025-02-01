@@ -2,15 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_template/view/ui/atoms/app_input.dart';
-import 'package:flutter_template/view/ui/atoms/app_text.dart';
-import 'package:flutter_template/view/ui/atoms/responsive_button.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 final webSocketProvider = Provider<WebSocketChannel>((ref) {
-  const url = 'ws://localhost:8081/ws';
+  const url = 'ws://192.168.0.112:8081/ws';
   return WebSocketChannel.connect(Uri.parse(url));
 });
 
@@ -24,14 +21,23 @@ class VideoChatPage extends HookConsumerWidget {
     final webSocket = ref.watch(webSocketProvider);
     final message = ref.watch(messageProvider);
     final messageController = useTextEditingController();
+    final RTCVideoRenderer localVideoRenderer =
+        useMemoized(() => RTCVideoRenderer());
+
+    final localSDP = useState<String>(""); // SDP を保存
+    final peerConnectionRef = useRef<RTCPeerConnection?>(null);
 
     useEffect(() {
-      final subscription = webSocket.stream.listen((data) {
-        ref.read(messageProvider.notifier).state = data.toString();
-      });
+      localVideoRenderer.initialize();
+      startLocalStream(localVideoRenderer, peerConnectionRef, localSDP); // 修正済み
 
-      return subscription.cancel;
-    }, [webSocket]);
+      return () {
+        if (peerConnectionRef.value != null) {
+          peerConnectionRef.value!.close();
+        }
+        localVideoRenderer.dispose();
+      };
+    }, []);
 
     return Scaffold(
       body: Container(
@@ -40,34 +46,39 @@ class VideoChatPage extends HookConsumerWidget {
           children: [
             const Padding(
               padding: EdgeInsets.all(16),
-              child: AppText(
-                "video chat",
-                style: AppTextStyle.h2,
+              child: Text(
+                "Video Chat",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(16),
-              child: AppText(
+              child: Text(
                 'Received Message: $message',
-                style: AppTextStyle.md,
+                style: const TextStyle(fontSize: 16),
               ),
+            ),
+            Expanded(
+              child: RTCVideoView(localVideoRenderer, mirror: true),
             ),
             Padding(
               padding: const EdgeInsets.all(16),
-              child: AppInput(
+              child: TextField(
                 controller: messageController,
-                label: 'メッセージを入力する',
-                color: Colors.purple,
+                decoration: const InputDecoration(
+                  labelText: 'メッセージを入力する',
+                  border: OutlineInputBorder(),
+                ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(16),
-              child: ResponsiveButton(
-                label: 'SDP を生成する',
-                color: Colors.purple,
-                onPressed: () async {
-                  await createSDPWithStun();
+              child: ElevatedButton(
+                onPressed: () {
+                  webSocket.sink
+                      .add(jsonEncode({'message': messageController.text}));
                 },
+                child: const Text('送信する'),
               ),
             ),
           ],
@@ -77,22 +88,53 @@ class VideoChatPage extends HookConsumerWidget {
   }
 }
 
-/// Google の STUN サーバーを使って SDP を生成する関数
-Future<void> createSDPWithStun() async {
-  // STUN サーバーを指定
-  final Map<String, dynamic> configuration = {
-    'iceServers': [
-      {'urls': 'stun:stun.l.google.com:19302'}
-    ]
-  };
+/// ローカルストリームの取得と SDP 生成
+Future<void> startLocalStream(
+  RTCVideoRenderer localVideoRenderer,
+  ObjectRef<RTCPeerConnection?> peerConnectionRef,
+  ValueNotifier<String> localSDP,
+) async {
+  try {
+    // STUN サーバーの設定
+    final Map<String, dynamic> configuration = {
+      'iceServers': [
+        {'urls': 'stun:stun.l.google.com:19302'}
+      ]
+    };
 
-  // PeerConnection の作成
-  final RTCPeerConnection peerConnection =
-      await createPeerConnection(configuration);
+    // PeerConnection の作成
+    final RTCPeerConnection peerConnection =
+        await createPeerConnection(configuration);
+    peerConnectionRef.value = peerConnection;
 
-  // SDP の生成
-  final RTCSessionDescription offer = await peerConnection.createOffer();
-  await peerConnection.setLocalDescription(offer);
+    // フロントカメラ（内カメ）を指定
+    final Map<String, dynamic> mediaConstraints = {
+      'video': {
+        'facingMode': 'user', // フロントカメラを指定
+      },
+      'audio': true,
+    };
 
-  print("Generated SDP with STUN: ${offer.sdp}");
+    // ローカルストリームの取得
+    final MediaStream stream =
+        await navigator.mediaDevices.getUserMedia(mediaConstraints);
+
+    // RTCVideoRenderer にストリームを設定
+    localVideoRenderer.srcObject = stream;
+
+    // PeerConnection にストリームを追加
+    for (var track in stream.getTracks()) {
+      peerConnection.addTrack(track, stream);
+    }
+
+    // SDP を生成
+    final RTCSessionDescription offer = await peerConnection.createOffer();
+    await peerConnection.setLocalDescription(offer);
+
+    // SDP を保存
+    localSDP.value = offer.sdp ?? "";
+    print("Generated SDP: ${offer.sdp}");
+  } catch (error) {
+    print("Error accessing media devices: $error");
+  }
 }

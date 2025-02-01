@@ -152,7 +152,6 @@
 				427DEC8DF00F03788A282C7F /* Pods-RunnerTests.release.xcconfig */,
 				E3D01B8D9661AAC201110537 /* Pods-RunnerTests.profile.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -478,7 +477,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.flutterTemplate;
+				PRODUCT_BUNDLE_IDENTIFIER = "--com.tamurakeito.flutter-template-webrtc";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

@@ -8,7 +8,7 @@ prd:
 	flutter run -t lib/main_production.dart
 
 jsv:
-	./node_modules/.bin/json-server --watch json-server/db.json --routes json-server/routes.json --middlewares json-server/middleware.js --port 3004
+	./node_modules/.bin/json-server --watch json-server/db.json --routes json-server/routes.json --middlewares json-server/middleware.js --port 3004 --host 0.0.0.0
 
 mocks:
 	dart run build_runner build
