@@ -9,13 +9,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 final webSocketProvider = Provider<WebSocketChannel>((ref) {
-  final url = 'ws://localhost:8080';
+  const url = 'ws://localhost:8081/ws';
   return WebSocketChannel.connect(Uri.parse(url));
 });
 
 final messageProvider = StateProvider<String>((ref) => '');
 
-class VideoChatPage extends ConsumerWidget {
+class VideoChatPage extends HookConsumerWidget {
   const VideoChatPage({super.key});
 
   @override
@@ -26,6 +26,7 @@ class VideoChatPage extends ConsumerWidget {
 
     useEffect(() {
       final subscription = webSocket.stream.listen((data) {
+        print('recieve: ${data.toString()}');
         ref.read(messageProvider.notifier).state = data.toString();
       });
 
@@ -37,27 +38,39 @@ class VideoChatPage extends ConsumerWidget {
         margin: const EdgeInsets.fromLTRB(0, 100, 0, 100),
         child: Column(
           children: [
-            const AppText(
-              "video chat",
-              style: AppTextStyle.h2,
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: AppText(
+                "video chat",
+                style: AppTextStyle.h2,
+              ),
             ),
-            AppText(
-              'Recieved Message: $message',
-              style: AppTextStyle.md,
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: AppText(
+                'Recieved Message: $message',
+                style: AppTextStyle.md,
+              ),
             ),
-            AppInput(
-              controller: messageController,
-              label: 'メッセージを入力する',
-              color: Colors.purple,
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: AppInput(
+                controller: messageController,
+                label: 'メッセージを入力する',
+                color: Colors.purple,
+              ),
             ),
-            ResponsiveButton(
-              label: '送信する',
-              color: Colors.purple,
-              onPressed: () {
-                webSocket.sink
-                    .add(jsonEncode({'message': messageController.text}));
-              },
-            )
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: ResponsiveButton(
+                label: '送信する',
+                color: Colors.purple,
+                onPressed: () {
+                  webSocket.sink
+                      .add(jsonEncode({'message': messageController.text}));
+                },
+              ),
+            ),
           ],
         ),
       ),
