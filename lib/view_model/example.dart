@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'package:flutter_template/types/example.dart';
+import 'package:flutter_template/model/example.dart';
 import 'package:flutter_template/model/http/injector/injector.dart'
     as http_injector;
 import 'package:flutter_template/model/local_data/injector/injector.dart'

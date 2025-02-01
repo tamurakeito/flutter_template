@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter_template/types/account.dart';
+import 'package:flutter_template/model/account.dart';
 import 'package:flutter_template/model/http/infrastructure/api_client.dart';
 import 'package:flutter_template/model/http/infrastructure/repository_impl/account.dart';
 import 'package:flutter_test/flutter_test.dart';

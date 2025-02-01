@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_template/types/account.dart';
+import 'package:flutter_template/model/account.dart';
 import 'package:flutter_template/errors/error.dart';
 import 'package:flutter_template/model/http/injector/injector.dart';
 import 'package:flutter_template/model/http/presentation/handler/account_handler.dart';
