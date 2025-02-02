@@ -18,6 +18,8 @@ class HomePage extends ConsumerWidget {
     final helloWorldViewModel = ref.read(helloWorldViewModelProvider.notifier);
     final authViewModel = ref.read(authViewModelProvider.notifier);
 
+    final user = ref.watch(authViewModelProvider).user;
+
     ref.listen<HelloWorldViewModelState>(helloWorldViewModelProvider,
         (previous, next) {
       if (next.errorMessage != null &&
@@ -48,6 +50,25 @@ class HomePage extends ConsumerWidget {
                   style: AppTextStyle.h1,
                 ),
               ),
+              if (user != null)
+                Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(2),
+                      child: AppText(
+                        "ユーザーID：${user.userId}",
+                        style: AppTextStyle.md,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(2),
+                      child: AppText(
+                        "名前：${user.name}",
+                        style: AppTextStyle.md,
+                      ),
+                    ),
+                  ],
+                ),
               Container(
                 margin: const EdgeInsets.all(16),
                 child: const AppText(
@@ -104,14 +125,7 @@ class HomePage extends ConsumerWidget {
                 label: "ログアウト",
                 color: Colors.pink,
                 handlePress: () async {
-                  authViewModel.clearUser();
                   context.push('/auth');
-                  await Future.delayed(const Duration(milliseconds: 500));
-                  if (!context.mounted) return;
-                  SnackbarService.showSnackBar(
-                    'ログアウトしました',
-                    color: Colors.pink.shade900,
-                  );
                 },
               ),
             ],

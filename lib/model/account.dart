@@ -1,43 +1,104 @@
-class User {
-  final int id;
-  final String userId;
-  final String name;
-
-  User({
-    required this.id,
-    required this.userId,
-    required this.name,
-  });
-}
-
-class SignInRequest {
-  final String userId;
-  final String password;
-
-  SignInRequest({
-    required this.userId,
-    required this.password,
-  });
-
-  factory SignInRequest.fromJson(Map<String, dynamic> json) {
-    return SignInRequest(
-      userId: json['user_id'] as String,
-      password: json['password'] as String,
-    );
-  }
-}
-
-class SignInResponse {
+abstract class Account {
   final int id;
   final String userId;
   final String name;
   final String token;
 
-  SignInResponse({
+  Account({
     required this.id,
     required this.userId,
     required this.name,
     required this.token,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'user_id': userId,
+      'name': name,
+      'token': token,
+    };
+  }
+}
+
+class User extends Account {
+  final String password;
+
+  User({
+    required super.id,
+    required super.userId,
+    required this.password,
+    required super.name,
+    required super.token,
+  });
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      ...super.toJson(),
+      'password': password,
+    };
+  }
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'] as int,
+      userId: json['user_id'] as String,
+      password: json['password'] as String,
+      name: json['name'] as String,
+      token: json['token'] as String,
+    );
+  }
+}
+
+abstract class AuthRequest {
+  final String userId;
+  final String password;
+
+  AuthRequest({
+    required this.userId,
+    required this.password,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'user_id': userId,
+      'password': password,
+    };
+  }
+}
+
+class SignInRequest extends AuthRequest {
+  SignInRequest({
+    required super.userId,
+    required super.password,
+  });
+}
+
+class SignUpRequest extends AuthRequest {
+  final String name;
+
+  SignUpRequest({
+    required super.userId,
+    required super.password,
+    required this.name,
+  });
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      ...super.toJson(),
+      'name': name,
+    };
+  }
+}
+
+class SignInResponse extends Account {
+  SignInResponse({
+    required super.id,
+    required super.userId,
+    required super.name,
+    required super.token,
   });
 
   factory SignInResponse.fromJson(Map<String, dynamic> json) {
@@ -50,37 +111,12 @@ class SignInResponse {
   }
 }
 
-class SignUpRequest {
-  final String userId;
-  final String password;
-  final String name;
-
-  SignUpRequest({
-    required this.userId,
-    required this.password,
-    required this.name,
-  });
-
-  factory SignUpRequest.fromJson(Map<String, dynamic> json) {
-    return SignUpRequest(
-      userId: json['user_id'] as String,
-      password: json['password'] as String,
-      name: json['name'] as String,
-    );
-  }
-}
-
-class SignUpResponse {
-  final int id;
-  final String userId;
-  final String name;
-  final String token;
-
+class SignUpResponse extends Account {
   SignUpResponse({
-    required this.id,
-    required this.userId,
-    required this.name,
-    required this.token,
+    required super.id,
+    required super.userId,
+    required super.name,
+    required super.token,
   });
 
   factory SignUpResponse.fromJson(Map<String, dynamic> json) {

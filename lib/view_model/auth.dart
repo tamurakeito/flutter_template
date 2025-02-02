@@ -1,10 +1,16 @@
 import 'dart:developer';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_template/model/account.dart';
 import 'package:flutter_template/errors/error.dart';
-import 'package:flutter_template/model/http/injector/injector.dart';
+import 'package:flutter_template/model/http/injector/injector.dart'
+    as http_injector;
+import 'package:flutter_template/model/local_data/injector/injector.dart'
+    as local_injector;
 import 'package:flutter_template/model/http/presentation/handler/account_handler.dart';
+import 'package:flutter_template/model/local_data/presentation/handler/auth_handler.dart';
 import 'package:flutter_template/utils/result.dart';
+import 'package:flutter_template/view/services/snackbar_service.dart';
 
 class AuthViewModelState {
   final User? user;
@@ -32,9 +38,14 @@ class AuthViewModelState {
 
 class AuthViewModel extends StateNotifier<AuthViewModelState> {
   final AccountHandler _accountHandler;
+  final AuthHandler _authHandler;
   final Ref ref;
 
-  AuthViewModel(this._accountHandler, this.ref) : super(AuthViewModelState());
+  AuthViewModel(
+    this._accountHandler,
+    this._authHandler,
+    this.ref,
+  ) : super(AuthViewModelState());
 
   Future<Result<SignInResponse, Err>> fetchSignIn(SignInRequest data) async {
     final startTime = DateTime.now();
@@ -53,13 +64,19 @@ class AuthViewModel extends StateNotifier<AuthViewModelState> {
         final User user = User(
           id: result.data!.id,
           userId: result.data!.userId,
+          password: data.password,
           name: result.data!.name,
+          token: result.data!.token,
         );
+        final err = await _authHandler.storeUser(user);
+        if (err != null) {
+          // ローカルストレージへの保存に失敗してもエラーは出さない
+          log("アカウント情報をローカルストレージに保存できませんでした。");
+        }
         state = state.copyWith(
           user: user,
           isLoading: false,
         );
-
         ref.read(tokenProvider.notifier).updateToken(result.data!.token);
         return result;
       } else {
@@ -134,8 +151,15 @@ class AuthViewModel extends StateNotifier<AuthViewModelState> {
         final User user = User(
           id: result.data!.id,
           userId: result.data!.userId,
+          password: data.password,
           name: result.data!.name,
+          token: result.data!.token,
         );
+        final err = await _authHandler.storeUser(user);
+        if (err != null) {
+          // ローカルストレージへの保存に失敗してもエラーは出さない
+          log("アカウント情報をローカルストレージに保存できませんでした。");
+        }
         state = state.copyWith(
           user: user,
           isLoading: false,
@@ -202,19 +226,33 @@ class AuthViewModel extends StateNotifier<AuthViewModelState> {
     );
   }
 
-  void clearUser() {
+  void clearUser() async {
+    final err = await _authHandler.removeUser();
+    if (err != null) {
+      // ローカルストレージからの削除に失敗してもエラーは出さない
+      log("アカウント情報をローカルストレージから削除できませんでした。");
+    }
+    await Future.delayed(const Duration(milliseconds: 500));
+    SnackbarService.showSnackBar(
+      'ログアウトしました',
+      color: Colors.pink.shade900,
+    );
     state = state.copyWith(user: null);
   }
 }
 
-final accountHandlerProvider =
-    Provider<AccountHandler>((ref) => Injector.injectAccountHandler());
+final accountHandlerProvider = Provider<AccountHandler>(
+    (ref) => http_injector.Injector.injectAccountHandler());
+
+final authHandlerProvider =
+    Provider<AuthHandler>((ref) => local_injector.Injector.injectAuthHandler());
 
 final authViewModelProvider =
     StateNotifierProvider<AuthViewModel, AuthViewModelState>(
   (ref) {
     final accountHandler = ref.read(accountHandlerProvider);
-    return AuthViewModel(accountHandler, ref);
+    final authHandler = ref.read(authHandlerProvider);
+    return AuthViewModel(accountHandler, authHandler, ref);
   },
 );
 

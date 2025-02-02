@@ -9,7 +9,6 @@ class Hello {
     required this.tag,
   });
 
-  // fromJson メソッドの定義
   factory Hello.fromJson(Map<String, dynamic> json) {
     return Hello(
       id: json['id'] as int,
@@ -28,7 +27,6 @@ class HelloWorld {
     required this.hello,
   });
 
-  // fromJson メソッドの定義
   factory HelloWorld.fromJson(Map<String, dynamic> json) {
     return HelloWorld(
       id: json['id'] as int,

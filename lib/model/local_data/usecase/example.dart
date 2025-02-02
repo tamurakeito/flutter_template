@@ -13,35 +13,18 @@ class HelloworldUsecase {
     try {
       final result = await repository.find(id);
       final err = result.error;
-      if (err != null) {
-        switch (err) {
-          case LocalDataError.notFound:
-            return Result(
-              data: null,
-              error: LocalDataError.notFound,
-            );
-          case LocalDataError.databaseError:
-            return Result(
-              data: null,
-              error: LocalDataError.databaseError,
-            );
-          default:
-            return Result(
-              data: null,
-              error: LocalDataError.internalError,
-            );
-        }
-      }
-
-      if (result.data == null) {
+      if (result.isSuccess) {
+        final detail = HelloWorld(id: result.data!.id, hello: result.data!);
+        return Result(
+          data: detail,
+          error: null,
+        );
+      } else {
         return Result(
           data: null,
-          error: LocalDataError.internalError,
+          error: err ?? LocalDataError.internalError,
         );
       }
-
-      final detail = HelloWorld(id: result.data!.id, hello: result.data!);
-      return Result(data: detail, error: null);
     } catch (e) {
       log(
         "[Error]HelloWorldUsecase.helloworldDetail",
