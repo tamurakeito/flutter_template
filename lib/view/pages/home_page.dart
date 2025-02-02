@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_template/errors/error.dart';
-import 'package:flutter_template/view/services/snackbar_service.dart';
+// import 'package:flutter_template/view/services/snackbar_service.dart';
 import 'package:flutter_template/view/ui/atoms/app_button.dart';
 import 'package:flutter_template/view_model/auth.dart';
 import 'package:flutter_template/view_model/example.dart';
@@ -16,7 +16,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final helloWorldViewModel = ref.read(helloWorldViewModelProvider.notifier);
-    final authViewModel = ref.read(authViewModelProvider.notifier);
+    // final authViewModel = ref.read(authViewModelProvider.notifier);
 
     final user = ref.watch(authViewModelProvider).user;
 

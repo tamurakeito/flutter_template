@@ -47,6 +47,18 @@ class AuthViewModel extends StateNotifier<AuthViewModelState> {
     this.ref,
   ) : super(AuthViewModelState());
 
+  /// アプリ起動時にローカルデータからユーザー情報をロード
+  Future<void> initialize() async {
+    await Future.delayed(const Duration(milliseconds: 1800));
+    final result = await _authHandler.loadUser();
+
+    if (result.isSuccess) {
+      final user = result.data;
+      state = state.copyWith(user: user);
+      ref.read(tokenProvider.notifier).updateToken(user!.token);
+    }
+  }
+
   Future<Result<SignInResponse, Err>> fetchSignIn(SignInRequest data) async {
     final startTime = DateTime.now();
     state = state.copyWith(isLoading: true);
@@ -255,6 +267,11 @@ final authViewModelProvider =
     return AuthViewModel(accountHandler, authHandler, ref);
   },
 );
+
+/// アプリ起動時に `initialize()` を実行する FutureProvider
+final authInitializerProvider = FutureProvider<void>((ref) async {
+  await ref.read(authViewModelProvider.notifier).initialize();
+});
 
 class TokenProvider extends StateNotifier<String?> {
   TokenProvider() : super(null);

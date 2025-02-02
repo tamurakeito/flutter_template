@@ -9,6 +9,12 @@ final goRouter = GoRouter(
   initialLocation: '/',
   redirect: (context, state) {
     final container = ProviderScope.containerOf(context);
+
+    final authInit = container.read(authInitializerProvider);
+    if (authInit.isLoading) {
+      return null; // 初期化中はリダイレクトしない
+    }
+
     final user = container.read(authViewModelProvider).user;
     final currentPath = state.uri.toString();
 
