@@ -44,7 +44,29 @@ class AuthPage extends HookConsumerWidget {
       }
     });
 
+    bool validateInputs(String user, String password) {
+      if (user.trim().isEmpty) {
+        SnackbarService.showSnackBar(
+          "ユーザーIDを入力してください。",
+          color: Colors.red.shade900,
+        );
+        return true;
+      }
+      if (password.trim().isEmpty) {
+        SnackbarService.showSnackBar(
+          "パスワードを入力してください。",
+          color: Colors.red.shade900,
+        );
+        return true;
+      }
+      return false;
+    }
+
     void handleSignIn() async {
+      if (validateInputs(userIdController.text, passwordController.text)) {
+        return;
+      }
+
       SignInRequest data = SignInRequest(
         userId: userIdController.text,
         password: passwordController.text,
@@ -176,6 +198,10 @@ class AuthPage extends HookConsumerWidget {
                               label: "次へ",
                               color: Colors.pink.shade900,
                               onPressed: () {
+                                if (validateInputs(userIdController.text,
+                                    passwordController.text)) {
+                                  return;
+                                }
                                 isDetailRegisterView.value = true;
                               },
                               isLoading: isLoading,
