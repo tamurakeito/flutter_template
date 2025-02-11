@@ -47,6 +47,7 @@ void main() {
         '/sign-in',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       )).thenAnswer((_) async => http.Response(jsonEncode(mockResponse), 200));
 
       final result = await repository.signIn(data);
@@ -75,6 +76,7 @@ void main() {
         '/sign-in',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       )).thenAnswer(
           (_) async => http.Response('Error: Request was invalid', 400));
 
@@ -100,6 +102,7 @@ void main() {
         '/sign-in',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       )).thenAnswer(
           (_) async => http.Response('Error: Resouce Not Found', 404));
 
@@ -125,6 +128,7 @@ void main() {
         '/sign-in',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       )).thenAnswer(
           (_) async => http.Response('Error: Internal server error', 500));
 
@@ -150,6 +154,7 @@ void main() {
         '/sign-in',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       )).thenAnswer((_) async =>
           http.Response('Error: Service temporarily unavailabe', 503));
 
@@ -175,6 +180,7 @@ void main() {
         '/sign-in',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       )).thenAnswer(
           (_) async => http.Response('Error: Unknown error occured', 999));
 
@@ -200,6 +206,7 @@ void main() {
         '/sign-in',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       )).thenThrow(const SocketException('Failed to connect to the network'));
 
       final result = await repository.signIn(data);
@@ -224,6 +231,7 @@ void main() {
         '/sign-in',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       )).thenThrow(TimeoutException('Connection timed out'));
 
       final result = await repository.signIn(data);
@@ -248,6 +256,7 @@ void main() {
         '/sign-in',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       )).thenThrow(Exception('Unexpected error'));
 
       final result = await repository.signIn(data);
@@ -285,6 +294,7 @@ void main() {
         '/sign-up',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       )).thenAnswer((_) async => http.Response(jsonEncode(mockResponse), 200));
 
       final result = await repository.signUp(data);
@@ -316,6 +326,7 @@ void main() {
         '/sign-up',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       )).thenAnswer(
           (_) async => http.Response('Error: Request was invalid', 400));
 
@@ -344,6 +355,7 @@ void main() {
         '/sign-up',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       )).thenAnswer((_) async => http.Response('Error: Resouce conflict', 409));
 
       final result = await repository.signUp(data);
@@ -371,6 +383,7 @@ void main() {
         '/sign-up',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       )).thenAnswer(
           (_) async => http.Response('Error: Internal server error', 500));
 
@@ -399,6 +412,7 @@ void main() {
         '/sign-up',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       )).thenAnswer((_) async =>
           http.Response('Error: Service temporarily unavailabe', 503));
 
@@ -428,6 +442,7 @@ void main() {
         '/sign-up',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       )).thenAnswer(
           (_) async => http.Response('Error: Unknown error occurred', 999));
 
@@ -456,6 +471,7 @@ void main() {
         '/sign-up',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       )).thenThrow(const SocketException('Failed to connect to the network'));
 
       final result = await repository.signUp(data);
@@ -483,6 +499,7 @@ void main() {
         '/sign-up',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       )).thenThrow(TimeoutException('Connection timed out'));
 
       final result = await repository.signUp(data);
@@ -510,6 +527,7 @@ void main() {
         '/sign-up',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       )).thenThrow(Exception('Unexpected error'));
 
       final result = await repository.signUp(data);

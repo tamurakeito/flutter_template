@@ -28,6 +28,7 @@ class AccountRepositoryImpl implements AccountRepository {
         '/sign-in',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       );
 
       if (response.statusCode == 200) {
@@ -100,6 +101,7 @@ class AccountRepositoryImpl implements AccountRepository {
         '/sign-up',
         method: 'POST',
         data: jsonData,
+        useAuth: false,
       );
 
       if (response.statusCode == 200) {

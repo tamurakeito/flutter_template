@@ -97,10 +97,10 @@ class AuthViewModel extends StateNotifier<AuthViewModelState> {
 
         switch (err) {
           case HttpError.badRequest:
-            message = "不正なリクエストです";
+            message = "ユーザーIDまたはパスワードの形式が正しくありません";
             break;
           case HttpError.notFound:
-            message = "データが存在しません";
+            message = "ユーザーIDまたはパスワードが間違っています";
             break;
           case HttpError.internalError:
             message = "サーバーでエラーが発生しました";
@@ -109,7 +109,7 @@ class AuthViewModel extends StateNotifier<AuthViewModelState> {
             message = "サーバーのデータベースが一時的に利用できません";
             break;
           case HttpError.networkUnavailable:
-            message = "ネットワーク接続がありません";
+            message = "インターネット接続がありません";
             break;
           case HttpError.timeout:
             message = "通信がタイムアウトしました";
@@ -183,7 +183,7 @@ class AuthViewModel extends StateNotifier<AuthViewModelState> {
 
         switch (err) {
           case HttpError.badRequest:
-            message = "不正なリクエストです";
+            message = "ユーザーIDまたはパスワードの形式が正しくありません";
             break;
           case HttpError.conflict:
             message = "使用できないユーザー名です";
@@ -195,7 +195,7 @@ class AuthViewModel extends StateNotifier<AuthViewModelState> {
             message = "サーバーのデータベースが一時的に利用できません";
             break;
           case HttpError.networkUnavailable:
-            message = "ネットワーク接続がありません";
+            message = "インターネット接続がありません";
             break;
           case HttpError.timeout:
             message = "通信がタイムアウトしました";

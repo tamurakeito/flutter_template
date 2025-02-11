@@ -71,10 +71,20 @@ class MockApiClient extends _i1.Mock implements _i3.ApiClient {
       ) as _i2.Client);
 
   @override
+  set token(String? _token) => super.noSuchMethod(
+        Invocation.setter(
+          #token,
+          _token,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   _i5.Future<_i2.Response> clientRequest(
     String? path, {
     String? method = r'GET',
     Map<String, dynamic>? data,
+    bool? useAuth = true,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -83,6 +93,7 @@ class MockApiClient extends _i1.Mock implements _i3.ApiClient {
           {
             #method: method,
             #data: data,
+            #useAuth: useAuth,
           },
         ),
         returnValue: _i5.Future<_i2.Response>.value(_FakeResponse_1(
@@ -93,6 +104,7 @@ class MockApiClient extends _i1.Mock implements _i3.ApiClient {
             {
               #method: method,
               #data: data,
+              #useAuth: useAuth,
             },
           ),
         )),
